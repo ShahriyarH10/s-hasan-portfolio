@@ -1,0 +1,1234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Portfolio of Md. Shahriyar Hasan — Final-year CSE student at AIUB and aspiring AI Engineer / Full-Stack Developer specializing in JavaScript, Python, Supabase, and automation.">
+  <meta name="keywords" content="Shahriyar Hasan, AIUB, Portfolio, Full-Stack Developer, AI Engineer, JavaScript, Python, Supabase">
+  <meta name="author" content="Md. Shahriyar Hasan">
+  <title>Md. Shahriyar Hasan — Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #faf9f6;
+      --paper: #ffffff;
+      --ink: #1a1a18;
+      --muted: #79766f;
+      --line: #e6e3dc;
+      --accent: #4b4ce0;
+      --accent-soft: #eeeefb;
+      --serif: 'Fraunces', serif;
+      --sans: 'Inter', system-ui, sans-serif;
+      --mono: 'JetBrains Mono', monospace;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--sans);
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      text-decoration-color: var(--accent);
+      text-underline-offset: 3px;
+    }
+
+    a:focus-visible,
+    button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+    }
+
+    /* ===== Layout shell ===== */
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 0;
+    }
+
+    /* ===== Side index (signature element) ===== */
+
+    .index-rail {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      padding: 48px 28px 48px 6%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-right: 1px solid var(--line);
+    }
+
+    .index-top .mono-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .index-name {
+      font-family: var(--serif);
+      font-size: 1.35rem;
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 30px;
+    }
+
+    .index-nav {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .index-nav li a {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding: 6px 0;
+      transition: color 0.2s ease;
+    }
+
+    .index-nav li a:hover {
+      color: var(--ink);
+      text-decoration: none;
+    }
+
+    .index-nav li a.active {
+      color: var(--accent);
+    }
+
+    .index-nav li a .num {
+      font-size: 0.7rem;
+      opacity: 0.55;
+    }
+
+    .index-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .index-bottom a {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    .index-bottom a:hover {
+      color: var(--accent);
+    }
+
+    /* ===== Main content ===== */
+
+    main {
+      padding: 0 6% 0 64px;
+    }
+
+    section {
+      padding: 90px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+    }
+
+    .eyebrow::before {
+      content: '';
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h2.heading {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      line-height: 1.2;
+      margin-bottom: 36px;
+      max-width: 18ch;
+    }
+
+    /* ===== Hero ===== */
+
+    #hero {
+      padding-top: 64px;
+      padding-bottom: 90px;
+    }
+
+    .hero-kicker {
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 22px;
+    }
+
+    .hero-kicker .dot {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #4caf7d;
+      margin-right: 8px;
+      vertical-align: middle;
+      box-shadow: 0 0 0 3px rgba(76,175,125,0.15);
+    }
+
+    h1.hero-title {
+      font-family: var(--serif);
+      font-weight: 500;
+      font-size: clamp(2.6rem, 6.5vw, 5rem);
+      line-height: 1.06;
+      letter-spacing: -0.01em;
+      max-width: 14ch;
+      margin-bottom: 28px;
+    }
+
+    h1.hero-title em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero-lede {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 46ch;
+      margin-bottom: 40px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .btn {
+      font-family: var(--sans);
+      font-size: 0.92rem;
+      font-weight: 500;
+      padding: 13px 26px;
+      border-radius: 6px;
+      border: 1px solid var(--ink);
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn:hover {
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--paper);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--ink);
+    }
+
+    /* Hero metrics row */
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      gap: 56px;
+      padding-top: 36px;
+      border-top: 1px solid var(--line);
+    }
+
+    .metric .num {
+      font-family: var(--serif);
+      font-size: 2.1rem;
+      font-weight: 500;
+      display: block;
+    }
+
+    .metric .label {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    /* ===== About ===== */
+
+    .about-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 64px;
+    }
+
+    .about-text p {
+      margin-bottom: 18px;
+      color: var(--ink);
+      max-width: 58ch;
+    }
+
+    .about-text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .focus-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-top: 28px;
+    }
+
+    .focus-list li {
+      display: grid;
+      grid-template-columns: 90px 1fr;
+      gap: 16px;
+      font-size: 0.95rem;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .focus-list li:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .focus-list .f-label {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding-top: 2px;
+    }
+
+    /* Profile card */
+
+    .profile-card {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 28px;
+      background: var(--paper);
+      align-self: start;
+    }
+
+    .profile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 13px 0;
+      border-bottom: 1px solid var(--line);
+      gap: 16px;
+    }
+
+    .profile-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .profile-row:first-child {
+      padding-top: 0;
+    }
+
+    .profile-row .p-key {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      white-space: nowrap;
+    }
+
+    .profile-row .p-val {
+      font-size: 0.92rem;
+      font-weight: 500;
+      text-align: right;
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: #2f8a5b;
+      background: #eaf6ef;
+      padding: 4px 10px;
+      border-radius: 50px;
+    }
+
+    .status-pill .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2f8a5b;
+    }
+
+    /* ===== Skills ===== */
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .skill-block {
+      background: var(--paper);
+      padding: 28px 32px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .skill-block:nth-child(2n) {
+      border-right: none;
+    }
+
+    .skill-block:nth-last-child(-n+2) {
+      border-bottom: none;
+    }
+
+    .skill-block h3 {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 14px;
+    }
+
+    .skill-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-pill {
+      font-size: 0.88rem;
+      padding: 6px 14px;
+      border-radius: 50px;
+      border: 1px solid var(--line);
+      background: var(--bg);
+    }
+
+    /* ===== Experience timeline ===== */
+
+    .exp-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+      padding: 32px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .exp-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .exp-item:first-child {
+      padding-top: 0;
+    }
+
+    .exp-date {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    .exp-role {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .exp-org {
+      color: var(--accent);
+      font-size: 0.92rem;
+      margin-bottom: 14px;
+    }
+
+    .exp-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .exp-list li {
+      position: relative;
+      padding-left: 18px;
+      font-size: 0.95rem;
+      color: var(--ink);
+    }
+
+    .exp-list li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--muted);
+    }
+
+    .exp-skills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .exp-skill {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* ===== Projects ===== */
+
+    .projects-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-row {
+      display: grid;
+      grid-template-columns: 36px 1.1fr 1.6fr auto;
+      gap: 28px;
+      align-items: start;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+      transition: padding-left 0.2s ease;
+    }
+
+    .project-row:first-child {
+      padding-top: 0;
+    }
+
+    .project-row:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .project-row:hover {
+      padding-left: 8px;
+    }
+
+    .project-index {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    .project-name {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+    }
+
+    .project-status-row {
+      margin-top: 8px;
+    }
+
+    .project-status-row .status-pill {
+      color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .project-status-row .status-pill.done {
+      color: #2f8a5b;
+      background: #eaf6ef;
+    }
+
+    .project-status-row .status-pill .dot {
+      background: currentColor;
+    }
+
+    .project-desc {
+      font-size: 0.95rem;
+      color: var(--muted);
+      max-width: 50ch;
+      margin-bottom: 12px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .project-tag {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      color: var(--muted);
+    }
+
+    .project-link-arrow {
+      font-family: var(--mono);
+      font-size: 0.85rem;
+      white-space: nowrap;
+      padding-top: 4px;
+    }
+
+    /* ===== Education ===== */
+
+    .edu-item {
+      display: grid;
+      grid-template-columns: 160px 1fr;
+      gap: 32px;
+    }
+
+    .edu-date {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      padding-top: 4px;
+    }
+
+    .edu-school {
+      font-family: var(--serif);
+      font-size: 1.25rem;
+      font-weight: 500;
+      margin-bottom: 6px;
+    }
+
+    .edu-degree {
+      color: var(--muted);
+      margin-bottom: 18px;
+    }
+
+    .edu-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .edu-tag {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* ===== Contact ===== */
+
+    #contact {
+      padding-bottom: 64px;
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 64px;
+      align-items: end;
+    }
+
+    .contact-lede {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 42ch;
+    }
+
+    .contact-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .contact-list a {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 0.98rem;
+      font-weight: 500;
+    }
+
+    .contact-list a:first-child {
+      padding-top: 0;
+    }
+
+    .contact-list a:last-child {
+      border-bottom: none;
+    }
+
+    .contact-list a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .contact-list a span.c-arrow {
+      font-family: var(--mono);
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      padding: 28px 0 48px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    /* ===== Mobile rail / nav ===== */
+
+    .mobile-bar {
+      display: none;
+    }
+
+    @media (max-width: 980px) {
+      .shell {
+        grid-template-columns: 1fr;
+      }
+
+      .index-rail {
+        display: none;
+      }
+
+      .mobile-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 6%;
+        border-bottom: 1px solid var(--line);
+        position: sticky;
+        top: 0;
+        background: var(--bg);
+        z-index: 50;
+      }
+
+      .mobile-bar .index-name {
+        margin-bottom: 0;
+        font-size: 1.15rem;
+      }
+
+      .mobile-bar a {
+        font-family: var(--mono);
+        font-size: 0.8rem;
+        color: var(--ink);
+        border: 1px solid var(--line);
+        padding: 8px 14px;
+        border-radius: 50px;
+      }
+
+      main {
+        padding: 0 6%;
+      }
+
+      .about-layout,
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .skills-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .skill-block {
+        border-right: none;
+      }
+
+      .skill-block:last-child {
+        border-bottom: none;
+      }
+
+      .exp-item,
+      .edu-item {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .project-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .project-index {
+        order: -1;
+      }
+
+      .metrics {
+        gap: 36px;
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+      * {
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="mobile-bar">
+  <span class="index-name">Shahriyar Hasan</span>
+  <a href="#contact">Contact</a>
+</div>
+
+<div class="shell">
+
+  <!-- ===== Side index ===== -->
+  <aside class="index-rail">
+    <div class="index-top">
+      <span class="mono-tag">Portfolio / 2026</span>
+      <div class="index-name">Md. Shahriyar<br>Hasan</div>
+
+      <ul class="index-nav">
+        <li><a href="#about"><span class="num">01</span> About</a></li>
+        <li><a href="#skills"><span class="num">02</span> Skills</a></li>
+        <li><a href="#experience"><span class="num">03</span> Experience</a></li>
+        <li><a href="#projects"><span class="num">04</span> Projects</a></li>
+        <li><a href="#education"><span class="num">05</span> Education</a></li>
+        <li><a href="#contact"><span class="num">06</span> Contact</a></li>
+      </ul>
+    </div>
+
+    <div class="index-bottom">
+      <a href="https://github.com/ShahriyarH10" target="_blank">GitHub ↗</a>
+      <a href="https://linkedin.com/in/md-shahriyar-hasan" target="_blank">LinkedIn ↗</a>
+      <!-- <a href="resume.pdf" download>Resume (PDF) ↓</a> -->
+    </div>
+  </aside>
+
+  <!-- ===== Main ===== -->
+  <main>
+
+    <section id="hero">
+      <p class="hero-kicker"><span class="dot"></span>Open to remote junior SW Engineering & AI engineering roles — graduating Dec 2026</p>
+
+      <h1 class="hero-title">I build software that's<br><em>actually used.</em></h1>
+
+      <p class="hero-lede">
+        Final-year Computer Science & Engineering student based in Dhaka,
+        Bangladesh. I work across the stack — JavaScript, Python, and
+        Supabase — and I'm currently deepening into AI engineering: LLM APIs,
+        RAG pipelines, and applied ML.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">View Projects</a>
+        <a href="#contact" class="btn btn-ghost">Get in Touch</a>
+        <!-- <a href="resume.pdf" class="btn btn-ghost" download>Download Resume</a> -->
+      </div>
+
+      <div class="metrics">
+        <div class="metric">
+          <span class="num">6+</span>
+          <span class="label">Shipped Projects</span>
+        </div>
+        <div class="metric">
+          <span class="num">Dec '26</span>
+          <span class="label">Graduation</span>
+        </div>
+        <div class="metric">
+          <span class="num">JS / Py</span>
+          <span class="label">Core Stack</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="about">
+      <p class="eyebrow">About</p>
+      <h2 class="heading">Full-stack roots, AI engineering ahead.</h2>
+
+      <div class="about-layout">
+        <div class="about-text">
+          <p>
+            I started in full-stack web development — building, shipping, and
+            maintaining a real production app (a shared-housing management
+            platform used by my own household) on JavaScript and Supabase.
+            That experience taught me what "done" actually means: handling
+            edge cases, writing migrations, and supporting real users, not
+            just demos.
+          </p>
+          <p>
+            I'm now applying that same build-it-properly approach to AI
+            engineering — working through Python fundamentals, LLM APIs, and
+            retrieval-augmented generation, with the goal of shipping a
+            deployed AI project within the next few months.
+          </p>
+
+          <ul class="focus-list">
+            <li>
+              <span class="f-label">Now</span>
+              <span>Python & AI engineering roadmap — LLM APIs, RAG pipelines, applied ML.</span>
+            </li>
+            <li>
+              <span class="f-label">Built</span>
+              <span>Production full-stack apps with JavaScript, Supabase, and Next.js.</span>
+            </li>
+            <li>
+              <span class="f-label">Also</span>
+              <span>Desktop automation with Electron & Playwright; data analysis with Python.</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="profile-card">
+          <div class="profile-row">
+            <span class="p-key">Status</span>
+            <span class="status-pill"><span class="dot"></span>Open to work</span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">Degree</span>
+            <span class="p-val">B.Sc. CSE</span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">University</span>
+            <span class="p-val">AIUB</span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">Location</span>
+            <span class="p-val">Dhaka, Bangladesh</span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">Looking for</span>
+            <span class="p-val">Remote · Junior Dev / AI Eng</span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">GitHub</span>
+            <span class="p-val"><a href="https://github.com/ShahriyarH10" target="_blank">ShahriyarH10</a></span>
+          </div>
+          <div class="profile-row">
+            <span class="p-key">LinkedIn</span>
+            <span class="p-val"><a href="https://linkedin.com/in/md-shahriyar-hasan" target="_blank">md-shahriyar-hasan</a></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="skills">
+      <p class="eyebrow">Skills</p>
+      <h2 class="heading">Tools I reach for.</h2>
+
+      <div class="skills-grid">
+        <div class="skill-block">
+          <h3>Frontend & Full-Stack</h3>
+          <div class="skill-pills">
+            <span class="skill-pill">JavaScript</span>
+            <span class="skill-pill">React</span>
+            <span class="skill-pill">Next.js</span>
+            <span class="skill-pill">HTML / CSS</span>
+            <span class="skill-pill">Tailwind CSS</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h3>Backend & Database</h3>
+          <div class="skill-pills">
+            <span class="skill-pill">Node.js / Express</span>
+            <span class="skill-pill">Supabase</span>
+            <span class="skill-pill">PostgreSQL</span>
+            <span class="skill-pill">SQLite</span>
+            <span class="skill-pill">Prisma</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h3>AI & Python</h3>
+          <div class="skill-pills">
+            <span class="skill-pill">Python</span>
+            <span class="skill-pill">Pandas / NumPy</span>
+            <span class="skill-pill">Machine Learning</span>
+            <span class="skill-pill">LangChain / RAG</span>
+            <span class="skill-pill">Data Analysis</span>
+          </div>
+        </div>
+        <div class="skill-block">
+          <h3>Tools & Deployment</h3>
+          <div class="skill-pills">
+            <span class="skill-pill">Git / GitHub</span>
+            <span class="skill-pill">Vercel</span>
+            <span class="skill-pill">Cloudflare</span>
+            <span class="skill-pill">Electron</span>
+            <span class="skill-pill">Playwright</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="experience">
+      <p class="eyebrow">Experience</p>
+      <h2 class="heading">What I've been building.</h2>
+
+      <div class="exp-item">
+        <div class="exp-date">2023 — Present</div>
+        <div>
+          <div class="exp-role">Independent Full-Stack & AI Developer</div>
+          <div class="exp-org">Self-directed projects</div>
+          <ul class="exp-list">
+            <li>Designed and built MessManager, a full-stack shared-housing management platform with meal tracking, billing, and member settlements — JavaScript + Supabase.</li>
+            <li>Implemented a web push notification system using service workers and a Supabase Edge Function backend.</li>
+            <li>Built AIUB Course Selector Pro, an Electron desktop app that automates course registration with conflict-free schedule planning.</li>
+            <li>Shipped a full-stack Islamic prayer app with Node.js, TypeScript, Express, and Next.js.</li>
+            <li>Progressing through a structured Python & AI engineering roadmap covering LLM APIs and RAG pipelines.</li>
+          </ul>
+          <div class="exp-skills">
+            <span class="exp-skill">JavaScript</span>
+            <span class="exp-skill">Supabase</span>
+            <span class="exp-skill">Electron</span>
+            <span class="exp-skill">Python</span>
+            <span class="exp-skill">Next.js</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects">
+      <p class="eyebrow">Projects</p>
+      <h2 class="heading">Selected work.</h2>
+
+      <div class="projects-list">
+
+        <div class="project-row">
+          <span class="project-index">01</span>
+          <div>
+            <div class="project-name">MessManager</div>
+            <div class="project-status-row"><span class="status-pill"><span class="dot"></span>Active</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Full-stack shared-housing platform — meal tracking, bazar entries, utility bills, rent collection, member settlements, and carry-forward credits, with real-time push notifications.</p>
+            <div class="project-tags">
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">Supabase</span>
+              <span class="project-tag">PostgreSQL</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://github.com/ShahriyarH10/Mess-Managements" target="_blank">GitHub ↗</a>
+        </div>
+
+        <div class="project-row">
+          <span class="project-index">02</span>
+          <div>
+            <div class="project-name">AIUB Course Selector Pro</div>
+            <div class="project-status-row"><span class="status-pill done"><span class="dot"></span>Completed</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Desktop app automating AIUB course-section loading and schedule conflict detection — generates multiple optimized, conflict-free registration plans.</p>
+            <div class="project-tags">
+              <span class="project-tag">Electron</span>
+              <span class="project-tag">Playwright</span>
+              <span class="project-tag">Automation</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://github.com/ShahriyarH10/aiub-course-selector-pro" target="_blank">GitHub ↗</a>
+        </div>
+
+        <!-- <div class="project-row">
+          <span class="project-index">03</span>
+          <div>
+            <div class="project-name">Dua — Islamic Prayer App</div>
+            <div class="project-status-row"><span class="status-pill done"><span class="dot"></span>Completed</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Full-stack web app for categorized Islamic prayers — TypeScript/Express backend, SQLite database, statically generated Next.js frontend.</p>
+            <div class="project-tags">
+              <span class="project-tag">Next.js</span>
+              <span class="project-tag">TypeScript</span>
+              <span class="project-tag">Express</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://github.com/ShahriyarH10" target="_blank">GitHub ↗</a>
+        </div> -->
+
+        <div class="project-row">
+          <span class="project-index">03</span>
+          <div>
+            <div class="project-name">Open Data Universe</div>
+            <div class="project-status-row"><span class="status-pill in-progress"><span class="dot"></span>In progress</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Dataset discovery site aggregating search across 14+ open data platforms — Cloudflare Pages frontend, Cloudflare Worker backend.</p>
+            <div class="project-tags">
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">Cloudflare Workers</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://open-data-frontend.pages.dev/" target="_blank">Live ↗</a>
+        </div>
+
+        <div class="project-row">
+          <span class="project-index">04</span>
+          <div>
+            <div class="project-name">AIUB Notice Monitor Bot</div>
+            <div class="project-status-row"><span class="status-pill done"><span class="dot"></span>Completed</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Automated bot monitoring AIUB's notice board hourly via GitHub Actions, sending real-time Telegram alerts for new notices.</p>
+            <div class="project-tags">
+              <span class="project-tag">Python</span>
+              <span class="project-tag">GitHub Actions</span>
+              <span class="project-tag">Telegram API</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://github.com/ShahriyarH10/university-notice-bot/" target="_blank">GitHub ↗</a>
+        </div>
+
+        <div class="project-row">
+          <span class="project-index">05</span>
+          <div>
+            <div class="project-name">RAG Document Q&A Chatbot</div>
+            <div class="project-status-row"><span class="status-pill in-progress"><span class="dot"></span>In progress</span></div>
+          </div>
+          <div>
+            <p class="project-desc">Retrieval-augmented generation chatbot for question-answering over documents — LangChain, FAISS vector search, HuggingFace embeddings.</p>
+            <div class="project-tags">
+              <span class="project-tag">Python</span>
+              <span class="project-tag">LangChain</span>
+              <span class="project-tag">FAISS</span>
+            </div>
+          </div>
+          <a class="project-link-arrow" href="https://github.com/ShahriyarH10/document-qa-chatbot" target="_blank">GitHub ↗</a>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="education">
+      <p class="eyebrow">Education</p>
+      <h2 class="heading">Academic background.</h2>
+
+      <div class="edu-item">
+        <div class="edu-date">Jun 2023 — Dec 2026</div>
+        <div>
+          <div class="edu-school">American International University-Bangladesh</div>
+          <div class="edu-degree">B.Sc. in Computer Science & Engineering — Final Semester</div>
+          <div class="edu-tags">
+            <span class="edu-tag">Software Engineering</span>
+            <span class="edu-tag">Data Structures & Algorithms</span>
+            <span class="edu-tag">Artificial Intelligence</span>
+            <span class="edu-tag">HCI</span>
+            <span class="edu-tag">Operating Systems</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact">
+      <p class="eyebrow">Contact</p>
+      <h2 class="heading">Let's work together.</h2>
+
+      <div class="contact-grid">
+        <p class="contact-lede">
+          I'm looking for remote junior developer roles, AI engineering
+          opportunities, and freelance or collaborative projects. The
+          fastest way to reach me is by email — I'll get back to you
+          within a day.
+        </p>
+
+        <div class="contact-list">
+          <a href="mailto:shahriyarhasan2020@gmail.com">Email <span class="c-arrow">↗</span></a>
+          <a href="https://github.com/ShahriyarH10" target="_blank">GitHub <span class="c-arrow">↗</span></a>
+          <a href="https://linkedin.com/in/md-shahriyar-hasan" target="_blank">LinkedIn <span class="c-arrow">↗</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 Md. Shahriyar Hasan</span>
+      <span>Dhaka, Bangladesh</span>
+    </footer>
+
+  </main>
+</div>
+
+<script>
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.index-nav a');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(link => link.classList.remove('active'));
+        const active = document.querySelector(`.index-nav a[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
