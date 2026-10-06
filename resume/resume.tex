@@ -1,0 +1,114 @@
+\documentclass[10pt,letterpaper]{article}
+
+\usepackage[margin=0.75in,top=0.55in,bottom=0.5in]{geometry}
+\usepackage{mathptmx}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{enumitem}
+\usepackage[hidelinks]{hyperref}
+
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0pt}
+\linespread{0.98}
+
+\newcommand{\sect}[1]{\par\vspace{6pt}{\large\bfseries #1}\par\vspace{1pt}\hrule height 0.4pt\vspace{3pt}}
+
+\setlist[itemize]{leftmargin=1.5em,itemsep=0pt,topsep=1pt,parsep=0pt,partopsep=0pt}
+
+\newcommand{\project}[2]{\textbf{#1} -- \textit{#2}\\}
+\newcommand{\tech}[1]{\textbf{Technologies:} #1\par\vspace{-1pt}}
+\newcommand{\entry}[2]{\textbf{#1}\hfill #2\par}
+
+\begin{document}
+
+\begin{center}
+  {\LARGE\bfseries MD. SHAHRIYAR HASAN}\\[2pt]
+  {\small Dhaka, Bangladesh $|$ shahriyarhasan2020@gmail.com}\\[-1pt]
+  {\small
+    \href{https://github.com/ShahriyarH10}{GitHub} $|$
+    \href{https://linkedin.com/in/md-shahriyar-hasan}{LinkedIn} $|$
+    \href{https://shahriyarh10.github.io/s-hasan-portfolio/}{Portfolio}}
+\end{center}
+
+\sect{CAREER OBJECTIVE}
+Final-semester Computer Science \& Engineering student (AIUB, Major in Information Systems, graduating December 2026)
+seeking a junior software engineering, AI engineering, or data science role. Built full-stack apps with live users; apply the
+same rigor to data analysis, machine learning, and RAG in Python. Co-author of an IoT paper accepted at ICCA 2026.
+
+\sect{SKILLS}
+\textbf{Languages:} JavaScript, TypeScript, Python, SQL, PHP, Java, C++, C\#, HTML, CSS\\
+\textbf{Frameworks:} React, Next.js, Node.js, Express, Electron, Tailwind CSS\\
+\textbf{Data Science \& AI:} Pandas, NumPy, Scikit-learn, Seaborn, LangChain, exploratory data analysis, data cleaning\\
+\textbf{Data \& Cloud:} Supabase, PostgreSQL, MySQL, SQLite, Cloudflare Workers, Vercel, Docker (basic)\\
+\textbf{Tools:} Git, GitHub Actions, Playwright, Linux, debugging and testing
+
+\sect{PROJECTS}
+\project{MessManager}{Shared-Housing Management Web App}
+\tech{JavaScript, Supabase, PostgreSQL, Web Push}
+\begin{itemize}
+  \item Built and run a production platform with 4 active users: meals, bills, rent, member settlements, and carry-forward credits
+  \item Added web push via service workers and a Supabase Edge Function; fixed settlement bugs by tracing carry chains
+\end{itemize}
+
+\project{Open Data Universe}{Dataset Discovery Web App}
+\tech{React, Cloudflare Workers, JavaScript}
+\begin{itemize}
+  \item Built and deployed a search app whose Cloudflare Worker backend aggregates 20+ open-data sources into one interface
+\end{itemize}
+
+\project{AIUB Notice Monitor Bot}{Automation}
+\tech{Python, GitHub Actions, Telegram API}
+\begin{itemize}
+  \item Checks the AIUB notice board hourly on GitHub Actions and sends Telegram alerts for new notices; used by 5 students
+\end{itemize}
+
+\project{AIUB Course Selector Pro}{Desktop Automation App}
+\tech{Electron, Playwright}
+\begin{itemize}
+  \item Automates course-section loading and schedule conflict detection, generating multiple conflict-free registration plans
+\end{itemize}
+
+\project{TourneyHub}{Tournament Management Web App (university team of 4)}
+\tech{PHP, MySQL (TiDB Cloud), JavaScript, Docker}
+\begin{itemize}
+  \item Redesigned and deployed a role-based platform (Admin, Organizer, Player) with team registration, match scheduling, and automatically computed league standings on a cloud MySQL database over TLS
+  \item Hardened the codebase with prepared statements, bcrypt password hashing, CSRF protection, and validated uploads; containerized with Docker for Render deployment
+\end{itemize}
+
+\project{Customer Segmentation}{RFM Analysis}
+\tech{Python, Pandas, Scikit-learn}
+\begin{itemize}
+  \item Engineered Recency, Frequency, and Monetary features from 541,909 UK retail transactions and segmented 4,372 customers into 3 K-Means clusters, choosing k via elbow-method SSE analysis
+\end{itemize}
+
+\project{NYC Taxi Revenue Analysis}{Data Cleaning \& Business Reporting}
+\tech{Python, Pandas}
+\begin{itemize}
+  \item Cleaned 6,433 trip records to 6,347 rows and built borough-level revenue and payment-method pivot reports
+\end{itemize}
+
+\sect{EDUCATION}
+\entry{American International University-Bangladesh (AIUB) -- Dhaka}{Jun 2023 -- Dec 2026 (Expected)}
+\begin{itemize}
+  \item B.Sc. in Computer Science \& Engineering, Major in Information Systems
+  \item \textbf{Relevant Coursework:} Database Systems, Machine Learning, Operating Systems, Computer Networks
+\end{itemize}
+\vspace{2pt}
+\entry{Shah Neamatullah College, \textnormal{Higher Secondary Certificate (HSC), Science -- Rajshahi}}{2020 -- 2021}
+\entry{Harimohan Govt. High School, \textnormal{Secondary School Certificate (SSC), Science -- Rajshahi}}{2018 -- 2019}
+
+\sect{CERTIFICATIONS}
+\begin{itemize}
+  \item Data Science \& Machine Learning with Python \hfill Ostad, 2026
+  \item Intermediate Python \hfill DataCamp, 2026
+  \item Learning Docker \hfill LinkedIn Learning, 2026
+  \item Ubuntu Linux Professional \hfill Canonical, 2026
+\end{itemize}
+
+\sect{ACHIEVEMENTS}
+\begin{itemize}
+  \item Co-author, IoT-Based Smart MedBox -- paper accepted at ICCA 2026 (Paper \#498)
+\end{itemize}
+
+\end{document}
