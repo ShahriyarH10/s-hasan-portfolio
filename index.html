@@ -42,6 +42,20 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <script>
+    // Enable motion before first paint; fall back to static if the main script never runs.
+    (function () {
+      var d = document.documentElement;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      d.classList.add('motion');
+      try {
+        if (sessionStorage.getItem('intro-seen')) d.classList.add('seen');
+        else sessionStorage.setItem('intro-seen', '1');
+      } catch (e) {}
+      setTimeout(function () { if (!window.__motionReady) d.classList.remove('motion'); }, 4000);
+    })();
+  </script>
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -165,7 +179,7 @@
     .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
 
     .hero-roles { font-size: .95rem; font-weight: 600; color: var(--muted); margin-bottom: 14px; }
-    .hero-roles span { color: var(--faint); margin: 0 6px; }
+    .hero-roles .sep { color: var(--faint); margin: 0 6px; }
 
     h1.hero-title {
       font-size: clamp(2.4rem, 5.2vw, 3.8rem); font-weight: 800; letter-spacing: -.035em; line-height: 1.05;
@@ -343,6 +357,338 @@
     footer { padding: 32px 0 48px; color: var(--faint); font-size: .86rem; }
     .footer-inner { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 
+    /* ===== Motion ===== */
+
+    :root { --ease: cubic-bezier(.22, 1, .36, 1); --spring: cubic-bezier(.34, 1.56, .64, 1); }
+
+    /* Intro curtain */
+    .motion:not(.seen) body::before {
+      content: ''; position: fixed; inset: 0; z-index: 1000; background: var(--ink); pointer-events: none;
+      clip-path: inset(0 0 0 0); animation: intro-out .8s var(--ease) .75s forwards;
+    }
+    .motion:not(.seen) body::after {
+      content: 'SH'; position: fixed; top: 50%; left: 50%; z-index: 1001; width: 76px; height: 76px; margin: -38px 0 0 -38px;
+      border-radius: 20px; background: linear-gradient(135deg, #4338ca, #7c3aed); color: #fff;
+      display: grid; place-items: center; font: 800 1.6rem/1 var(--sans); letter-spacing: .02em; pointer-events: none;
+      box-shadow: 0 0 60px rgba(124,58,237,.6); animation: intro-mark 1.3s var(--ease) forwards;
+    }
+    @keyframes intro-mark {
+      0% { transform: scale(.3) rotate(-25deg); opacity: 0; }
+      35% { transform: scale(1.06) rotate(0); opacity: 1; }
+      55% { transform: scale(1); opacity: 1; }
+      100% { transform: translateY(-40px) scale(.8); opacity: 0; visibility: hidden; }
+    }
+    @keyframes intro-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
+
+    /* Scroll progress */
+    .progress {
+      position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none;
+      transform-origin: 0 50%; transform: scaleX(var(--p, 0));
+      background: linear-gradient(90deg, #4338ca, #7c3aed, #db2777);
+    }
+
+    .topbar { transition: box-shadow .35s, background-color .35s; }
+    .topbar.scrolled { box-shadow: 0 8px 28px rgba(15,23,42,.07); background: rgba(255,255,255,.82); }
+
+    .brand-mark { background: linear-gradient(135deg, #4338ca, #6366f1, #7c3aed, #4338ca); background-size: 300% 300%; transition: transform .5s var(--spring); }
+    .motion .brand-mark { animation: grad-pan 8s ease infinite; }
+    .brand:hover .brand-mark { transform: rotate(-10deg) scale(1.1); }
+    @keyframes grad-pan { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+
+    /* Sliding nav indicator */
+    .nav { position: relative; }
+    .nav a { position: relative; z-index: 1; transition: color .25s; }
+    .nav.has-ind a.active, .nav.has-ind a:hover { background: transparent; }
+    .nav.has-ind a:hover { color: var(--accent); }
+    .nav-ind {
+      position: absolute; top: 0; left: 0; width: 0; height: 0; border-radius: 8px; background: var(--accent-soft);
+      opacity: 0; pointer-events: none;
+      transition: transform .5s var(--ease), width .5s var(--ease), height .5s var(--ease), opacity .3s;
+    }
+
+    /* Buttons: shine, ripple, arrows */
+    .btn { position: relative; overflow: hidden; isolation: isolate; transition: background-color .2s, border-color .2s, color .2s, transform .35s var(--spring), box-shadow .3s; }
+    .btn-primary::before {
+      content: ''; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+      background: linear-gradient(110deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+      transform: translateX(-120%); transition: transform .8s var(--ease);
+    }
+    .btn-primary:hover::before { transform: translateX(120%); }
+    .btn-primary:hover { box-shadow: 0 10px 24px -6px rgba(67,56,202,.45); }
+    .btn span[aria-hidden] { display: inline-block; transition: transform .35s var(--spring); }
+    .contact-actions .btn:nth-child(1):hover span[aria-hidden] { transform: translateX(5px); }
+    .contact-actions .btn:nth-child(2):hover span[aria-hidden] { transform: translateY(3px); }
+    .contact-actions .btn:nth-child(n+3):hover span[aria-hidden] { transform: translate(3px, -3px); }
+    .ripple {
+      position: absolute; border-radius: 50%; background: currentColor; opacity: .22; transform: scale(0);
+      pointer-events: none; z-index: -1; animation: ripple .7s var(--ease) forwards;
+    }
+    @keyframes ripple { to { transform: scale(1); opacity: 0; } }
+
+    /* Reveal primitives */
+    .motion .rv {
+      opacity: 0; translate: var(--rx0, 0px) var(--ry0, 36px); scale: var(--rs0, 1);
+      transition: opacity 1s var(--ease) var(--d, 0s), translate 1s var(--ease) var(--d, 0s), scale 1s var(--ease) var(--d, 0s),
+                  transform .5s var(--ease), box-shadow .35s, border-color .35s, background-color .35s;
+    }
+    .motion .rv.in { opacity: 1; translate: 0 0; scale: 1; }
+    .rv-left { --rx0: -40px; --ry0: 0px; }
+    .rv-right { --rx0: 40px; --ry0: 0px; }
+    .rv-zoom { --rs0: .94; }
+
+    .split .w { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: .12em; margin-bottom: -.12em; }
+    .split .w > span { display: inline-block; transform-origin: 0 100%; }
+    .motion .split .w > span {
+      translate: 0 115%; rotate: 6deg;
+      transition: translate 1.1s var(--ease), rotate 1.1s var(--ease);
+      transition-delay: calc(var(--d, 0s) + var(--wi, 0) * 55ms);
+    }
+    .motion .split.in .w > span { translate: 0 0; rotate: 0deg; }
+
+    .motion .stg > * {
+      --sd: calc(var(--d, 0s) + var(--base, .3s) + var(--i, 0) * var(--step, 70ms));
+      opacity: 0; translate: var(--sx, 0px) var(--sy, 14px);
+      transition: opacity .7s var(--ease) var(--sd), translate .7s var(--ease) var(--sd),
+                  transform .35s var(--spring), background-color .25s, border-color .25s, color .25s, box-shadow .3s;
+    }
+    .motion .in .stg > *, .motion .stg.in > * { opacity: 1; translate: 0 0; }
+
+    .motion .draw svg * {
+      stroke-dasharray: var(--len, 0); stroke-dashoffset: var(--len, 0);
+      transition: stroke-dashoffset 1.6s var(--ease) calc(var(--d, 0s) + .35s);
+    }
+    .motion .in .draw svg * { stroke-dashoffset: 0; }
+
+    .motion .eyebrow { display: flex; align-items: center; gap: 10px; }
+    .motion .eyebrow::before {
+      content: ''; width: 26px; height: 2px; border-radius: 2px; background: currentColor;
+      scale: 0 1; transform-origin: 0 50%; transition: scale .9s var(--ease) .25s;
+    }
+    .motion .eyebrow.in::before { scale: 1 1; }
+
+    /* Tilt + spotlight surfaces */
+    .motion .tilt { transform: perspective(1000px) rotateX(var(--tiltX, 0deg)) rotateY(var(--tiltY, 0deg)) translateY(var(--lift, 0px)); }
+    .spot { position: relative; }
+    .spot::after {
+      content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .4s;
+      background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgba(99,102,241,.13), transparent 45%);
+    }
+    .spot:hover::after { opacity: 1; }
+    .spot:hover { border-color: #c7d2fe; }
+
+    /* Hero */
+    #hero { position: relative; overflow: hidden; isolation: isolate; }
+    .hero-grid { will-change: transform; }
+    .hero-fx { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+    .hero-fx canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .hero-fx .blobs { position: absolute; inset: 0; transition: translate 1.2s var(--ease); }
+    .hero-fx .dots {
+      position: absolute; inset: 0;
+      background-image: radial-gradient(rgba(15,23,42,.09) 1px, transparent 1px); background-size: 26px 26px;
+      -webkit-mask-image: radial-gradient(ellipse 60% 70% at 75% 25%, #000, transparent 75%);
+              mask-image: radial-gradient(ellipse 60% 70% at 75% 25%, #000, transparent 75%);
+      animation: dots-pan 30s linear infinite;
+    }
+    @keyframes dots-pan { to { background-position: 26px 26px; } }
+    .blob { position: absolute; border-radius: 50%; filter: blur(64px); will-change: transform; }
+    .blob.b1 { width: 440px; height: 440px; background: #c7d2fe; opacity: .6; top: -160px; right: -60px; animation: drift1 18s ease-in-out infinite alternate; }
+    .blob.b2 { width: 340px; height: 340px; background: #fbcfe8; opacity: .4; bottom: -140px; left: 35%; animation: drift2 22s ease-in-out infinite alternate; }
+    .blob.b3 { width: 280px; height: 280px; background: #a5f3fc; opacity: .35; top: 25%; left: -100px; animation: drift3 20s ease-in-out infinite alternate; }
+    @keyframes drift1 { to { transform: translate(-140px, 90px) scale(1.15); } }
+    @keyframes drift2 { to { transform: translate(160px, -70px) scale(.88); } }
+    @keyframes drift3 { to { transform: translate(90px, -110px) scale(1.22); } }
+
+    .pill .dot { position: relative; }
+    .motion .pill .dot::after {
+      content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--ok);
+      animation: ping 1.9s var(--ease) infinite;
+    }
+    @keyframes ping { 0% { transform: scale(1); opacity: .6; } 100% { transform: scale(3.2); opacity: 0; } }
+
+    .hero-roles .role { position: relative; transition: color .45s; }
+    .hero-roles .role::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -3px; height: 2px; border-radius: 2px; background: var(--accent);
+      transform: scaleX(0); transform-origin: right; transition: transform .6s var(--ease);
+    }
+    .hero-roles .role.on { color: var(--accent); }
+    .hero-roles .role.on::after { transform: scaleX(1); transform-origin: left; }
+
+    .motion .hero-title em { position: relative; display: inline-block; }
+    .motion .hero-title em .w > span {
+      background: linear-gradient(90deg, #4338ca, #7c3aed, #db2777, #4338ca); background-size: 300% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: shimmer 7s linear infinite;
+    }
+    @keyframes shimmer { to { background-position: 300% 0; } }
+    .motion .hero-title em::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: .02em; height: .11em; border-radius: 99px;
+      background: linear-gradient(90deg, #4338ca, #7c3aed, #db2777); opacity: .28;
+      transform: scaleX(0); transform-origin: left; transition: transform 1.2s var(--ease) 1s;
+    }
+    .motion .hero-title.in em::after { transform: scaleX(1); }
+
+    .hero-links a { position: relative; transition: color .25s; }
+    .hero-links a:hover { text-decoration: none; }
+    .hero-links a::after {
+      content: ''; position: absolute; left: 0; right: 0; bottom: -2px; height: 1.5px; background: currentColor;
+      transform: scaleX(0); transform-origin: right; transition: transform .45s var(--ease);
+    }
+    .hero-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+    .glance-row { transition: background-color .25s; }
+    .glance-row dd { transition: color .25s, transform .35s var(--spring); }
+    .glance-row:hover dd { color: var(--accent); transform: translateX(-3px); }
+
+    .proof { position: relative; overflow: hidden; }
+    .motion .proof::before {
+      content: ''; position: absolute; top: 0; left: 0; width: 40%; height: 2px; z-index: 1;
+      background: linear-gradient(90deg, transparent, #7c3aed, transparent); animation: scan 4.5s linear infinite;
+    }
+    @keyframes scan { from { translate: -100% 0; } to { translate: 250% 0; } }
+    .proof-item { transition: background-color .3s; }
+    .proof-item:hover { background: var(--accent-soft); }
+    .proof-num { transform-origin: 0 50%; transition: transform .45s var(--spring); }
+    .proof-item:hover .proof-num { transform: scale(1.1); }
+
+    /* Section ambience */
+    section.alt { position: relative; overflow: hidden; isolation: isolate; }
+    .motion section.alt::before {
+      content: ''; position: absolute; z-index: -1; width: 640px; height: 640px; border-radius: 50%; top: -220px; left: -220px;
+      background: radial-gradient(circle, rgba(99,102,241,.09), transparent 70%); pointer-events: none;
+      animation: roam 26s ease-in-out infinite alternate;
+    }
+    @keyframes roam { to { transform: translate(calc(100vw - 320px), 260px); } }
+
+    /* Fit cards */
+    .fit-icon { transition: transform .55s var(--spring), background-color .3s, color .3s, box-shadow .3s; }
+    .fit-card:hover .fit-icon { transform: rotate(-10deg) scale(1.12); background: var(--accent); color: #fff; box-shadow: 0 8px 20px -4px rgba(67,56,202,.5); }
+    .motion .fit-card:hover, .motion .card:hover { --lift: -6px; box-shadow: 0 24px 48px -16px rgba(67,56,202,.28); }
+    .motion .fit-proof li::before { scale: 0; transition: scale .5s var(--spring) calc(var(--sd, 0s) + .2s); }
+    .motion .in .fit-proof li::before { scale: 1; }
+
+    /* Project cards */
+    .card h3 { transition: color .25s; }
+    .card:hover h3 { color: var(--accent); }
+    .thumb img { transition: transform .9s var(--ease); }
+    .card:hover .thumb img { transform: scale(1.06); }
+    .motion .card .thumb img {
+      clip-path: inset(0 0 100% 0); scale: 1.2;
+      transition: clip-path 1.2s var(--ease) calc(var(--d, 0s) + .15s), scale 1.6s var(--ease) calc(var(--d, 0s) + .15s), transform .9s var(--ease);
+    }
+    .motion .card.in .thumb img { clip-path: inset(0 0 0 0); scale: 1; }
+    .thumb::after {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.45) 50%, transparent 65%);
+      translate: -100% 0; transition: translate 1s var(--ease);
+    }
+    .card:hover .thumb::after { translate: 100% 0; }
+
+    .thumb-icon {
+      background-image: radial-gradient(rgba(67,56,202,.13) 1px, transparent 1px), linear-gradient(135deg, var(--accent-soft), #fff 70%);
+      background-size: 18px 18px, auto;
+    }
+    .motion .thumb-icon { animation: grid-pan 14s linear infinite; }
+    @keyframes grid-pan { to { background-position: 18px 18px, 0 0; } }
+    .thumb-icon .ico { position: relative; transition: transform .5s var(--spring); }
+    .card:hover .thumb-icon .ico { transform: scale(1.1) rotate(-4deg); }
+    .motion .thumb-icon .ico { animation: float 4s ease-in-out infinite; }
+    .motion .thumb-icon .ico::before {
+      content: ''; position: absolute; inset: -8px; border-radius: 24px; border: 1px solid rgba(67,56,202,.3);
+      animation: ring 2.8s var(--ease) infinite;
+    }
+    @keyframes float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -8px; } }
+    @keyframes ring { 0% { transform: scale(.9); opacity: .9; } 100% { transform: scale(1.4); opacity: 0; } }
+    .motion .projects-grid .card:nth-child(4) .ico svg { transform-origin: 50% 12%; animation: bell 3s ease-in-out infinite; }
+    .motion .projects-grid .card:nth-child(5) .ico svg { animation: blink-screen 3.2s ease-in-out infinite; }
+    .motion .projects-grid .card:nth-child(6) .ico svg { animation: bob 2.2s ease-in-out infinite; }
+    @keyframes bell { 0%, 55%, 100% { rotate: 0deg; } 8% { rotate: 16deg; } 16% { rotate: -13deg; } 24% { rotate: 9deg; } 32% { rotate: -6deg; } 40% { rotate: 3deg; } }
+    @keyframes blink-screen { 0%, 100% { opacity: 1; } 48% { opacity: 1; } 50% { opacity: .35; } 52% { opacity: 1; } }
+    @keyframes bob { 0%, 100% { scale: 1; } 50% { scale: .88; } }
+    .cap.typing::after { content: '▍'; margin-left: 2px; color: var(--accent); animation: caret 1s steps(1) infinite; }
+    @keyframes caret { 50% { opacity: 0; } }
+
+    .status.live::before { animation: live-pulse 2s ease-out infinite; }
+    .status:not(.live):not(.done)::before { animation: caret 1.4s ease-in-out infinite; }
+    @keyframes live-pulse { 0% { box-shadow: 0 0 0 0 rgba(4,120,87,.55); } 100% { box-shadow: 0 0 0 7px rgba(4,120,87,0); } }
+
+    .tag { transition: transform .35s var(--spring), background-color .25s, border-color .25s, color .25s; }
+    .tag:hover { transform: translateY(-2px); color: var(--accent); background: var(--accent-soft); border-color: #c7d2fe; }
+
+    .card-actions a { position: relative; overflow: hidden; isolation: isolate; transition: background-color .2s, border-color .2s, color .2s, transform .35s var(--spring); }
+    .card-actions a:hover { transform: translateY(-2px); }
+
+    .chip-list a { position: relative; overflow: hidden; isolation: isolate; transition: color .3s, border-color .3s, transform .35s var(--spring); }
+    .chip-list a::before {
+      content: ''; position: absolute; inset: 0; z-index: -1; background: var(--accent-soft);
+      transform: translateY(101%); transition: transform .45s var(--ease);
+    }
+    .chip-list a:hover::before { transform: translateY(0); }
+
+    /* Skills */
+    .pill-skill { display: inline-block; transition: transform .35s var(--spring), background-color .25s, border-color .25s, color .25s, box-shadow .3s; }
+    .pill-skill:hover { transform: translateY(-3px) scale(1.04); color: var(--accent); background: #fff; border-color: #c7d2fe; box-shadow: 0 8px 18px -6px rgba(67,56,202,.3); }
+    .skill-block h3 { transition: color .3s, letter-spacing .4s var(--ease); }
+    .skill-block:hover h3 { color: var(--accent); letter-spacing: .12em; }
+
+    /* Experience */
+    .exp-card { position: relative; overflow: hidden; }
+    .exp-card::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: linear-gradient(#4338ca, #7c3aed, #db2777); transform-origin: 50% 0;
+    }
+    .motion .exp-card::before { scale: 1 0; transition: scale 1.6s var(--ease) .3s; }
+    .motion .exp-card.in::before { scale: 1 1; }
+    .exp-list li::before { transition: transform .35s var(--spring), opacity .25s; }
+    .exp-list li:hover { transform: translateX(4px); }
+    .exp-list li:hover::before { transform: scale(1.7); opacity: 1; }
+
+    /* Education */
+    .cert-list li { transition: transform .35s var(--spring), color .25s; }
+    .cert-list li:hover { transform: translateX(5px); color: var(--accent); }
+    .achievement { position: relative; overflow: hidden; }
+    .motion .achievement::before {
+      content: ''; position: absolute; inset: 0; pointer-events: none;
+      background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%);
+      translate: -100% 0; animation: sweep 4s var(--ease) 1.2s infinite;
+    }
+    @keyframes sweep { 0% { translate: -100% 0; } 55%, 100% { translate: 100% 0; } }
+
+    /* Contact */
+    .contact-card { position: relative; overflow: hidden; isolation: isolate; }
+    .contact-fx { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
+    .contact-fx i { position: absolute; border-radius: 50%; filter: blur(70px); }
+    .contact-fx i:nth-child(1) { width: 380px; height: 380px; background: rgba(99,102,241,.55); top: -160px; right: -80px; animation: drift1 14s ease-in-out infinite alternate; }
+    .contact-fx i:nth-child(2) { width: 320px; height: 320px; background: rgba(219,39,119,.32); bottom: -160px; left: -60px; animation: drift2 17s ease-in-out infinite alternate; }
+    .contact-card.spot::after { background: radial-gradient(520px circle at var(--mx, 50%) var(--my, 50%), rgba(255,255,255,.09), transparent 45%); }
+    .contact-card.spot:hover { border-color: transparent; }
+    .contact-actions .btn-secondary:hover { background: rgba(255,255,255,.08); }
+
+    /* Cursor */
+    .cursor, .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 300; border-radius: 50%; transition: opacity .3s; }
+    .cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--accent); }
+    .cursor {
+      width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1.5px solid rgba(67,56,202,.45);
+      transition: width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease), background-color .3s, border-color .3s, opacity .3s;
+    }
+    .cursor.hot { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgba(99,102,241,.1); border-color: rgba(67,56,202,.15); }
+    .cursor.inv { border-color: rgba(255,255,255,.55); }
+    .cursor.inv.hot { background: rgba(255,255,255,.1); }
+    .cursor.off, .cursor-dot.off { opacity: 0; }
+
+    /* Back to top */
+    .to-top {
+      position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 48px; height: 48px; border-radius: 50%;
+      background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--accent);
+      display: grid; place-items: center; cursor: pointer;
+      opacity: 0; translate: 0 16px; pointer-events: none;
+      transition: opacity .4s var(--ease), translate .4s var(--ease), transform .35s var(--spring);
+    }
+    .to-top.show { opacity: 1; translate: 0 0; pointer-events: auto; }
+    .to-top:hover { transform: translateY(-3px); }
+    .to-top svg.arrow { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .to-top svg.ring { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); transform: rotate(-90deg); }
+    .to-top .ring circle { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 138.2px; stroke-dashoffset: calc(138.2px * (1 - var(--p, 0))); }
+
     /* ===== Responsive ===== */
 
     @media (max-width: 1000px) {
@@ -383,11 +729,13 @@
       .contact-card { background: #fff; color: #000; border: 1px solid #ccc; }
       .contact-card p { color: #333; }
       .contact-actions { display: none; }
+      .progress, .to-top, .cursor, .cursor-dot, .hero-fx, .contact-fx { display: none; }
+      .rv, .stg > *, .split .w > span, .card .thumb img { opacity: 1 !important; translate: none !important; scale: none !important; clip-path: none !important; }
     }
 
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
-      * { transition: none !important; }
+      *, *::before, *::after { transition: none !important; animation: none !important; }
     }
   </style>
 </head>
@@ -420,7 +768,7 @@
       <div class="hero-grid">
         <div>
           <p class="pill"><span class="dot"></span>Open to onsite/remote junior roles · Graduating Dec 2026</p>
-          <p class="hero-roles">Software Engineer<span>/</span>AI Engineer<span>/</span>Data Scientist</p>
+          <p class="hero-roles"><span class="role">Software Engineer</span><span class="sep">/</span><span class="role">AI Engineer</span><span class="sep">/</span><span class="role">Data Scientist</span></p>
           <h1 class="hero-title">I build software that's <em>actually used.</em></h1>
           <p class="hero-lede">
             I'm Md. Shahriyar Hasan, a final-year Computer Science &amp; Engineering student in Dhaka.
@@ -764,18 +1112,47 @@
 </footer>
 
 <script>
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const motion = document.documentElement.classList.contains('motion');
+  const fine = matchMedia('(pointer: fine)').matches;
+
+  /* ===== Nav: active section + sliding indicator ===== */
+
   const sections = document.querySelectorAll('section[id]');
-  const navLinks = document.querySelectorAll('.nav a');
+  const nav = $('.nav');
+  const navLinks = $$('.nav a');
+  const ind = document.createElement('span');
+  ind.className = 'nav-ind';
+  ind.setAttribute('aria-hidden', 'true');
+  nav.prepend(ind);
+  nav.classList.add('has-ind');
+
+  let activeLink = null;
+  let navHover = false;
+
+  function moveInd(link) {
+    if (!link) { ind.style.opacity = 0; return; }
+    ind.style.opacity = 1;
+    ind.style.width = link.offsetWidth + 'px';
+    ind.style.height = link.offsetHeight + 'px';
+    ind.style.transform = `translate(${link.offsetLeft}px, ${link.offsetTop}px)`;
+  }
+
+  navLinks.forEach(link => link.addEventListener('mouseenter', () => { navHover = true; moveInd(link); }));
+  nav.addEventListener('mouseleave', () => { navHover = false; moveInd(activeLink); });
+  addEventListener('resize', () => moveInd(activeLink));
 
   const observer = new IntersectionObserver(entries => {
     entries.forEach(entry => {
       if (!entry.isIntersecting) return;
+      activeLink = null;
       navLinks.forEach(link => {
         const match = link.getAttribute('href') === `#${entry.target.id}`;
         link.classList.toggle('active', match);
         if (match) {
+          activeLink = link;
           link.setAttribute('aria-current', 'true');
-          const nav = link.parentElement;
           if (nav.scrollWidth > nav.clientWidth) {
             nav.scrollTo({ left: link.offsetLeft - 16, behavior: 'smooth' });
           }
@@ -783,10 +1160,367 @@
           link.removeAttribute('aria-current');
         }
       });
+      if (!navHover) moveInd(activeLink);
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
 
   sections.forEach(s => observer.observe(s));
+
+  /* ===== Scroll progress, sticky shadow, back-to-top ===== */
+
+  const bar = document.createElement('div');
+  bar.className = 'progress';
+  bar.setAttribute('aria-hidden', 'true');
+  document.body.prepend(bar);
+
+  const toTop = document.createElement('button');
+  toTop.className = 'to-top';
+  toTop.type = 'button';
+  toTop.setAttribute('aria-label', 'Back to top');
+  toTop.innerHTML = '<svg class="ring" viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="22"/></svg>'
+    + '<svg class="arrow" viewBox="0 0 24 24" aria-hidden="true"><polyline points="18 15 12 9 6 15"/></svg>';
+  toTop.addEventListener('click', () => scrollTo({ top: 0 }));
+  document.body.append(toTop);
+
+  const topbar = $('.topbar');
+  const hero = $('#hero');
+  const heroGrid = $('.hero-grid');
+  let heroFx = null;
+  let scrollQueued = false;
+
+  function onScroll() {
+    scrollQueued = false;
+    const y = scrollY;
+    const max = document.documentElement.scrollHeight - innerHeight;
+    const p = max > 0 ? Math.min(1, y / max) : 0;
+    bar.style.setProperty('--p', p);
+    toTop.style.setProperty('--p', p);
+    topbar.classList.toggle('scrolled', y > 8);
+    toTop.classList.toggle('show', y > 600);
+    if (motion && y < hero.offsetHeight) {
+      heroGrid.style.transform = `translateY(${y * 0.12}px)`;
+      heroGrid.style.opacity = Math.max(0, 1 - y / (hero.offsetHeight * 1.3));
+      if (heroFx) heroFx.style.transform = `translateY(${y * 0.35}px)`;
+    }
+  }
+  addEventListener('scroll', () => {
+    if (!scrollQueued) { scrollQueued = true; requestAnimationFrame(onScroll); }
+  }, { passive: true });
+  onScroll();
+
+  /* ===== Button ripples ===== */
+
+  document.addEventListener('pointerdown', e => {
+    const host = e.target.closest('.btn, .card-actions a, .chip-list a');
+    if (!host) return;
+    const r = host.getBoundingClientRect();
+    const size = Math.max(r.width, r.height) * 2.2;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple';
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - r.left - size / 2}px;top:${e.clientY - r.top - size / 2}px`;
+    host.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove());
+  });
+
+  if (motion) {
+    /* ===== Tag elements for reveal ===== */
+
+    const tag = (sel, cls, delay = 0, step = 0, mod = 0) => $$(sel).forEach((el, i) => {
+      el.classList.add(...cls.split(' '));
+      el.style.setProperty('--d', (delay + (mod ? i % mod : i) * step) + 's');
+    });
+    const stagger = (sel, vars = {}) => $$(sel).forEach(el => {
+      el.classList.add('stg');
+      Object.entries(vars).forEach(([k, v]) => el.style.setProperty(k, v));
+      [...el.children].forEach((child, i) => child.style.setProperty('--i', i));
+    });
+
+    function splitWords(el) {
+      let wi = 0;
+      const walk = node => [...node.childNodes].forEach(n => {
+        if (n.nodeType === 1) return walk(n);
+        if (n.nodeType !== 3) return;
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.append(' ');
+          const w = document.createElement('span');
+          const inner = document.createElement('span');
+          w.className = 'w';
+          inner.textContent = part;
+          inner.style.setProperty('--wi', wi++);
+          w.append(inner);
+          frag.append(w);
+        });
+        n.replaceWith(frag);
+      });
+      walk(el);
+      el.classList.add('split');
+    }
+
+    // Hero sequence
+    tag('#hero .pill', 'rv', 0);
+    tag('#hero .hero-roles', 'rv', .08);
+    splitWords($('.hero-title'));
+    $('.hero-title').style.setProperty('--d', '.15s');
+    tag('#hero .hero-lede', 'rv', .45);
+    tag('#hero .hero-actions', 'rv', .55);
+    tag('#hero .hero-links', 'rv', .65);
+    tag('#hero .glance', 'rv rv-right tilt spot', .35);
+    stagger('.glance dl', { '--base': '.45s', '--sx': '16px', '--sy': '0px' });
+    tag('#hero .proof', 'rv', .7);
+    stagger('.proof', { '--base': '.2s', '--step': '90ms' });
+
+    // Sections
+    tag('section:not(#hero) .eyebrow', 'rv');
+    $$('h2.title, .contact-card h2').forEach(h => { splitWords(h); h.style.setProperty('--d', '.08s'); });
+    tag('.section-lede', 'rv', .15);
+    tag('.fit-card', 'rv tilt spot', .1, .12);
+    $$('.fit-icon, .thumb-icon .ico').forEach(el => el.classList.add('draw'));
+    stagger('.fit-proof', { '--base': '.45s', '--step': '110ms', '--sx': '-12px', '--sy': '0px' });
+    tag('.card', 'rv tilt spot', 0, .1, 3);
+    stagger('.card .tags', { '--base': '.45s', '--step': '50ms', '--sy': '8px' });
+    tag('.notebooks', 'rv spot');
+    stagger('.chip-list', { '--step': '60ms' });
+    tag('.skill-block', 'rv spot', 0, .1, 2);
+    stagger('.pills', { '--base': '.25s', '--step': '45ms', '--sy': '10px' });
+    tag('.exp-card', 'rv spot');
+    stagger('.exp-list', { '--base': '.3s', '--step': '90ms', '--sx': '-16px', '--sy': '0px' });
+    stagger('.exp-card > div > .tags', { '--base': '.9s', '--step': '50ms' });
+    tag('.edu-grid .panel', 'rv spot', 0, .12);
+    stagger('.cert-list', { '--sx': '16px', '--sy': '0px', '--step': '80ms' });
+    stagger('.school-min', { '--base': '.5s', '--step': '100ms' });
+    tag('.contact-card', 'rv rv-zoom spot');
+    tag('.contact-card p', 'rv', .35);
+    stagger('.contact-actions', { '--base': '.4s', '--step': '90ms', '--sx': '24px', '--sy': '0px' });
+    tag('footer .footer-inner', 'rv');
+
+    // Stroke lengths for line-drawing icons
+    $$('.draw svg *').forEach(el => {
+      if (el.getTotalLength) el.style.setProperty('--len', Math.ceil(el.getTotalLength()) + 1);
+    });
+
+    /* ===== Reveal hooks ===== */
+
+    const show = el => {
+      el.classList.add('in');
+      el.dispatchEvent(new CustomEvent('reveal'));
+    };
+
+    const io = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      show(e.target);
+      io.unobserve(e.target);
+    }), { threshold: .12, rootMargin: '0px 0px -6% 0px' });
+
+    $$('.rv, .split, .stg').filter(el => !hero.contains(el)).forEach(el => io.observe(el));
+
+    // Count-up numbers; non-numeric values decode from scrambled glyphs
+    function countUp(el) {
+      const raw = el.textContent.trim();
+      const m = raw.match(/^(\d+)(\D*)$/);
+      const t0 = performance.now();
+      const dur = 1500;
+      const glyphs = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      const step = now => {
+        const p = Math.min(1, (now - t0) / dur);
+        const e = 1 - Math.pow(1 - p, 4);
+        if (m) {
+          el.textContent = Math.round(+m[1] * e) + m[2];
+        } else {
+          const done = Math.floor(raw.length * e);
+          el.textContent = [...raw].map((c, i) => i < done || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0]).join('');
+        }
+        if (p < 1) requestAnimationFrame(step);
+        else el.textContent = raw;
+      };
+      requestAnimationFrame(step);
+    }
+    $('.proof').addEventListener('reveal', () => $$('.proof-num').forEach((el, i) => setTimeout(() => countUp(el), 300 + i * 120)));
+
+    // Typewriter captions on icon thumbnails
+    $$('.cap').forEach(cap => {
+      const text = cap.textContent;
+      cap.textContent = '';
+      cap.closest('.card').addEventListener('reveal', () => {
+        let i = 0;
+        cap.classList.add('typing');
+        setTimeout(function type() {
+          cap.textContent = text.slice(0, ++i);
+          if (i < text.length) setTimeout(type, 28 + Math.random() * 40);
+          else setTimeout(() => cap.classList.remove('typing'), 1400);
+        }, 600);
+      });
+    });
+
+    /* ===== Hero entrance ===== */
+
+    const roles = $$('.hero-roles .role');
+    const startHero = () => {
+      $$('.rv, .split, .stg', hero).forEach(show);
+      let r = 0;
+      setTimeout(function cycle() {
+        roles.forEach((el, i) => el.classList.toggle('on', i === r));
+        r = (r + 1) % roles.length;
+        setTimeout(cycle, 2200);
+      }, 1400);
+    };
+    setTimeout(startHero, document.documentElement.classList.contains('seen') ? 60 : 900);
+
+    /* ===== Hero background: aurora, dot grid, particle network ===== */
+
+    heroFx = document.createElement('div');
+    heroFx.className = 'hero-fx';
+    heroFx.setAttribute('aria-hidden', 'true');
+    heroFx.innerHTML = '<div class="blobs"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div><div class="dots"></div><canvas></canvas>';
+    hero.prepend(heroFx);
+
+    const blobs = $('.blobs', heroFx);
+    const cv = $('canvas', heroFx);
+    const ctx = cv.getContext('2d');
+    const mouse = { x: -1e4, y: -1e4 };
+    let W = 0, H = 0, pts = [], running = false;
+
+    function sizeCanvas() {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      W = hero.offsetWidth;
+      H = hero.offsetHeight;
+      cv.width = W * dpr;
+      cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const n = Math.min(80, Math.round((W * H) / 15000));
+      pts = Array.from({ length: n }, () => ({
+        x: Math.random() * W, y: Math.random() * H,
+        vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
+        r: Math.random() * 1.6 + .7
+      }));
+    }
+
+    function frame() {
+      if (!running) return;
+      ctx.clearRect(0, 0, W, H);
+      for (const p of pts) {
+        const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy);
+        if (d < 120 && d > 0) { p.x += (dx / d) * 1.2; p.y += (dy / d) * 1.2; }
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x += W; else if (p.x > W) p.x -= W;
+        if (p.y < 0) p.y += H; else if (p.y > H) p.y -= H;
+      }
+      ctx.lineWidth = 1;
+      for (let i = 0; i < pts.length; i++) {
+        const a = pts[i];
+        for (let j = i + 1; j < pts.length; j++) {
+          const b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
+          if (d < 120) {
+            ctx.strokeStyle = `rgba(67,56,202,${(1 - d / 120) * .16})`;
+            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+          }
+        }
+        const md = Math.hypot(a.x - mouse.x, a.y - mouse.y);
+        if (md < 180) {
+          ctx.strokeStyle = `rgba(124,58,237,${(1 - md / 180) * .35})`;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
+        }
+        ctx.fillStyle = 'rgba(67,56,202,.38)';
+        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
+      }
+      requestAnimationFrame(frame);
+    }
+
+    const setRunning = on => {
+      if (on && !running) { running = true; requestAnimationFrame(frame); }
+      running = on;
+    };
+    let heroVisible = true;
+    new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; setRunning(heroVisible && !document.hidden); }).observe(hero);
+    document.addEventListener('visibilitychange', () => setRunning(heroVisible && !document.hidden));
+
+    let resizeTimer;
+    new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(sizeCanvas, 150); }).observe(hero);
+    sizeCanvas();
+
+    hero.addEventListener('pointermove', e => {
+      const r = hero.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+      blobs.style.translate = `${(mouse.x / W - .5) * 40}px ${(mouse.y / H - .5) * 40}px`;
+    });
+    hero.addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e4; blobs.style.translate = '0 0'; });
+
+    /* ===== Contact card aurora ===== */
+
+    const cfx = document.createElement('div');
+    cfx.className = 'contact-fx';
+    cfx.setAttribute('aria-hidden', 'true');
+    cfx.innerHTML = '<i></i><i></i>';
+    $('.contact-card').prepend(cfx);
+
+    /* ===== Pointer-driven effects (desktop only) ===== */
+
+    if (fine) {
+      // Tilt + spotlight
+      $$('.spot').forEach(el => {
+        let raf = 0;
+        el.addEventListener('pointermove', e => {
+          cancelAnimationFrame(raf);
+          raf = requestAnimationFrame(() => {
+            const r = el.getBoundingClientRect();
+            const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+            el.style.setProperty('--mx', px * 100 + '%');
+            el.style.setProperty('--my', py * 100 + '%');
+            if (el.classList.contains('tilt')) {
+              el.style.setProperty('--tiltY', (px - .5) * 8 + 'deg');
+              el.style.setProperty('--tiltX', (.5 - py) * 8 + 'deg');
+            }
+          });
+        });
+        el.addEventListener('pointerleave', () => {
+          cancelAnimationFrame(raf);
+          el.style.setProperty('--tiltX', '0deg');
+          el.style.setProperty('--tiltY', '0deg');
+        });
+      });
+
+      // Magnetic buttons
+      $$('.btn, .chip-list a, .card-actions a').forEach(el => {
+        const pull = el.closest('.contact-actions') ? .12 : .3;
+        el.addEventListener('pointermove', e => {
+          const r = el.getBoundingClientRect();
+          el.style.transform = `translate(${(e.clientX - r.left - r.width / 2) * pull}px, ${(e.clientY - r.top - r.height / 2) * pull * 1.2}px)`;
+        });
+        el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+      });
+
+      // Trailing cursor ring
+      const ring = document.createElement('div');
+      const dot = document.createElement('div');
+      ring.className = 'cursor off';
+      dot.className = 'cursor-dot off';
+      ring.setAttribute('aria-hidden', 'true');
+      dot.setAttribute('aria-hidden', 'true');
+      document.body.append(ring, dot);
+      let cx = innerWidth / 2, cy = innerHeight / 2, rx = cx, ry = cy;
+      addEventListener('pointermove', e => {
+        cx = e.clientX; cy = e.clientY;
+        dot.style.transform = `translate3d(${cx}px, ${cy}px, 0)`;
+        ring.classList.remove('off');
+        dot.classList.remove('off');
+      }, { passive: true });
+      document.addEventListener('pointerover', e => {
+        ring.classList.toggle('hot', !!e.target.closest('a, button'));
+        ring.classList.toggle('inv', !!e.target.closest('.contact-card'));
+      });
+      document.documentElement.addEventListener('mouseleave', () => { ring.classList.add('off'); dot.classList.add('off'); });
+      (function follow() {
+        rx += (cx - rx) * .18;
+        ry += (cy - ry) * .18;
+        ring.style.transform = `translate3d(${rx}px, ${ry}px, 0)`;
+        requestAnimationFrame(follow);
+      })();
+    }
+  }
+
+  window.__motionReady = true;
 </script>
 
 </body>
