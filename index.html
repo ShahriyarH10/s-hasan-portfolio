@@ -6,8 +6,8 @@
   <meta name="description" content="Portfolio of Md. Shahriyar Hasan — final-year CSE student at AIUB seeking junior Software Engineer, AI Engineer, and Data Science roles. JavaScript, Python, Supabase, and applied machine learning.">
   <meta name="keywords" content="Shahriyar Hasan, AIUB, Portfolio, Software Engineer, AI Engineer, Data Scientist, Full-Stack Developer, JavaScript, Python, Supabase, Machine Learning">
   <meta name="author" content="Md. Shahriyar Hasan">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light">
+  <meta name="theme-color" content="#05060f">
+  <meta name="color-scheme" content="dark">
   <link rel="canonical" href="https://shahriyarh10.github.io/s-hasan-portfolio/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shahriyarh10.github.io/s-hasan-portfolio/">
@@ -49,7 +49,7 @@
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       d.classList.add('motion');
       try {
-        if (sessionStorage.getItem('intro-seen')) d.classList.add('seen');
+        if (location.hash || sessionStorage.getItem('intro-seen')) d.classList.add('seen');
         else sessionStorage.setItem('intro-seen', '1');
       } catch (e) {}
       setTimeout(function () { if (!window.__motionReady) d.classList.remove('motion'); }, 4000);
@@ -60,20 +60,22 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      color-scheme: light;
-      --bg: #ffffff;
-      --soft: #f6f7fb;
-      --ink: #0f172a;
-      --muted: #475569;
-      --faint: #64748b;
-      --line: #e2e8f0;
-      --accent: #4338ca;
-      --accent-hover: #3730a3;
-      --accent-soft: #eef2ff;
-      --ok: #047857;
-      --ok-soft: #ecfdf5;
+      color-scheme: dark;
+      --bg: #05060f;
+      --surface: rgba(13,15,34,.82);
+      --soft: rgba(255,255,255,.05);
+      --ink: #f1f3ff;
+      --muted: #b4bcd6;
+      --faint: #929bb8;
+      --line: rgba(255,255,255,.12);
+      --accent: #a598ff;
+      --accent-solid: #5b4bff;
+      --accent-hover: #4a3af0;
+      --accent-soft: rgba(139,124,255,.16);
+      --ok: #34d399;
+      --ok-soft: rgba(52,211,153,.13);
       --radius: 14px;
-      --shadow: 0 1px 2px rgba(15,23,42,.05), 0 8px 24px rgba(15,23,42,.06);
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.45);
       --sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
       --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
     }
@@ -97,7 +99,7 @@
 
     .skip-link {
       position: absolute; left: 12px; top: -48px; z-index: 100;
-      background: var(--ink); color: #fff; padding: 10px 16px; border-radius: 8px; font-size: .85rem;
+      background: #fff; color: #05060f; padding: 10px 16px; border-radius: 8px; font-size: .85rem;
     }
     .skip-link:focus { top: 12px; text-decoration: none; }
 
@@ -105,7 +107,7 @@
 
     .topbar {
       position: sticky; top: 0; z-index: 50;
-      background: rgba(255,255,255,.92);
+      background: rgba(5,6,15,.72);
       backdrop-filter: saturate(180%) blur(10px);
       -webkit-backdrop-filter: saturate(180%) blur(10px);
       border-bottom: 1px solid var(--line);
@@ -138,9 +140,9 @@
       border: 1px solid transparent; cursor: pointer; transition: background .15s, border-color .15s, transform .15s;
     }
     .btn:hover { text-decoration: none; }
-    .btn-primary { background: var(--accent); color: #fff; }
+    .btn-primary { background: var(--accent-solid); color: #fff; }
     .btn-primary:hover { background: var(--accent-hover); color: #fff; }
-    .btn-secondary { background: #fff; color: var(--ink); border-color: var(--line); }
+    .btn-secondary { background: var(--surface); color: var(--ink); border-color: var(--line); }
     .btn-secondary:hover { border-color: var(--ink); }
     .btn-sm { padding: 9px 16px; font-size: .86rem; }
 
@@ -162,12 +164,7 @@
 
     /* ===== Hero ===== */
 
-    #hero {
-      padding: 64px 0 56px;
-      background:
-        radial-gradient(900px 380px at 85% -10%, var(--accent-soft), transparent 70%),
-        var(--bg);
-    }
+    #hero { padding: 64px 0 56px; }
 
     .hero-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 56px; align-items: center; }
 
@@ -197,7 +194,7 @@
     .hero-links a:hover { color: var(--accent); }
 
     .glance {
-      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
       padding: 8px 24px;
     }
     .glance-title {
@@ -216,7 +213,7 @@
 
     .proof {
       margin-top: 56px; display: grid; grid-template-columns: repeat(4, 1fr);
-      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
     }
     .proof-item { padding: 24px 28px; border-left: 1px solid var(--line); }
     .proof-item:first-child { border-left: none; }
@@ -228,7 +225,7 @@
     .fit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
     .fit-card {
-      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px;
       display: flex; flex-direction: column;
     }
     .fit-icon {
@@ -247,21 +244,21 @@
     .projects-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
     .card {
-      background: #fff; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
+      background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden;
       display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s, border-color .2s;
     }
-    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: #cbd5e1; }
+    .card:hover { transform: translateY(-3px); box-shadow: var(--shadow); border-color: rgba(255,255,255,.28); }
 
     .thumb { position: relative; aspect-ratio: 16 / 10; background: var(--soft); border-bottom: 1px solid var(--line); overflow: hidden; }
     .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
 
     .thumb-icon {
       width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px;
-      background: linear-gradient(135deg, var(--accent-soft), #fff 70%);
+      background: linear-gradient(135deg, var(--accent-soft), transparent 70%);
       color: var(--accent);
     }
     .thumb-icon .ico {
-      width: 64px; height: 64px; border-radius: 18px; background: #fff; border: 1px solid #dfe3f5;
+      width: 64px; height: 64px; border-radius: 18px; background: rgba(255,255,255,.06); border: 1px solid var(--line);
       display: grid; place-items: center; box-shadow: 0 6px 18px rgba(67,56,202,.12);
     }
     .thumb-icon .ico svg { width: 30px; height: 30px; }
@@ -288,7 +285,7 @@
     .card-actions { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 16px; border-top: 1px solid var(--line); }
     .card-actions a { font-size: .86rem; font-weight: 600; padding: 7px 14px; border-radius: 8px; border: 1px solid var(--line); color: var(--ink); }
     .card-actions a:hover { text-decoration: none; border-color: var(--accent); color: var(--accent); }
-    .card-actions a.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .card-actions a.primary { background: var(--accent-solid); border-color: var(--accent-solid); color: #fff; }
     .card-actions a.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: #fff; }
 
     .notebooks { margin-top: 48px; padding: 28px; background: var(--soft); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -297,21 +294,21 @@
     .chip-list { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; }
     .chip-list a {
       display: inline-block; font-size: .88rem; font-weight: 500; padding: 7px 14px; border-radius: 999px;
-      background: #fff; border: 1px solid var(--line); color: var(--ink);
+      background: var(--surface); border: 1px solid var(--line); color: var(--ink);
     }
     .chip-list a:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
 
     /* ===== Skills ===== */
 
     .skills-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
-    .skill-block { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 28px; }
+    .skill-block { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px 28px; }
     .skill-block h3 { font-size: .8rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--faint); margin-bottom: 14px; }
     .pills { display: flex; flex-wrap: wrap; gap: 8px; }
     .pill-skill { font-size: .9rem; font-weight: 500; padding: 6px 14px; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); }
 
     /* ===== Experience ===== */
 
-    .exp-card { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; display: grid; grid-template-columns: 180px 1fr; gap: 32px; }
+    .exp-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 32px; display: grid; grid-template-columns: 180px 1fr; gap: 32px; }
     .exp-date { font-size: .88rem; font-weight: 600; color: var(--faint); padding-top: 4px; }
     .exp-role { font-size: 1.25rem; font-weight: 700; letter-spacing: -.015em; }
     .exp-org { color: var(--accent); font-weight: 500; font-size: .95rem; margin: 2px 0 16px; }
@@ -322,7 +319,7 @@
     /* ===== Education ===== */
 
     .edu-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 20px; align-items: start; }
-    .panel { background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 28px; }
     .panel + .panel { margin-top: 20px; }
     .panel h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 4px; letter-spacing: -.01em; }
     .panel .sub { color: var(--muted); font-size: .93rem; margin-bottom: 16px; }
@@ -335,23 +332,23 @@
     .cert-list li:first-child { border-top: none; padding-top: 0; }
     .cert-list li span { color: var(--faint); white-space: nowrap; font-size: .86rem; }
 
-    .achievement { background: var(--accent-soft); border-color: #dfe3f5; }
+    .achievement { background: linear-gradient(var(--accent-soft), var(--accent-soft)), #0d0f22; border-color: var(--line); }
     .achievement h3 { color: var(--accent); font-size: .78rem; letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
     .achievement p { font-weight: 600; font-size: 1rem; }
 
     /* ===== Contact ===== */
 
     .contact-card {
-      background: var(--ink); color: #fff; border-radius: 20px; padding: 56px; display: grid;
+      background: rgba(10,8,28,.78); color: #fff; border-radius: 20px; padding: 56px; display: grid;
       grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: center;
     }
     .contact-card h2 { font-size: clamp(1.8rem, 3.4vw, 2.5rem); font-weight: 800; letter-spacing: -.025em; line-height: 1.12; margin-bottom: 14px; }
     .contact-card p { color: #cbd5e1; max-width: 46ch; }
     .contact-actions { display: flex; flex-direction: column; gap: 12px; }
     .contact-actions .btn { width: 100%; justify-content: space-between; }
-    .contact-actions .btn-primary { background: #fff; color: var(--ink); }
-    .contact-actions .btn-primary:hover { background: #e2e8f0; color: var(--ink); }
-    .contact-actions .btn-secondary { background: transparent; color: #fff; border-color: #334155; }
+    .contact-actions .btn-primary { background: #fff; color: #05060f; }
+    .contact-actions .btn-primary:hover { background: #e2e8f0; color: #05060f; }
+    .contact-actions .btn-secondary { background: transparent; color: #fff; border-color: rgba(255,255,255,.25); }
     .contact-actions .btn-secondary:hover { border-color: #fff; }
 
     footer { padding: 32px 0 48px; color: var(--faint); font-size: .86rem; }
@@ -361,25 +358,6 @@
 
     :root { --ease: cubic-bezier(.22, 1, .36, 1); --spring: cubic-bezier(.34, 1.56, .64, 1); }
 
-    /* Intro curtain */
-    .motion:not(.seen) body::before {
-      content: ''; position: fixed; inset: 0; z-index: 1000; background: var(--ink); pointer-events: none;
-      clip-path: inset(0 0 0 0); animation: intro-out .8s var(--ease) .75s forwards;
-    }
-    .motion:not(.seen) body::after {
-      content: 'SH'; position: fixed; top: 50%; left: 50%; z-index: 1001; width: 76px; height: 76px; margin: -38px 0 0 -38px;
-      border-radius: 20px; background: linear-gradient(135deg, #4338ca, #7c3aed); color: #fff;
-      display: grid; place-items: center; font: 800 1.6rem/1 var(--sans); letter-spacing: .02em; pointer-events: none;
-      box-shadow: 0 0 60px rgba(124,58,237,.6); animation: intro-mark 1.3s var(--ease) forwards;
-    }
-    @keyframes intro-mark {
-      0% { transform: scale(.3) rotate(-25deg); opacity: 0; }
-      35% { transform: scale(1.06) rotate(0); opacity: 1; }
-      55% { transform: scale(1); opacity: 1; }
-      100% { transform: translateY(-40px) scale(.8); opacity: 0; visibility: hidden; }
-    }
-    @keyframes intro-out { to { clip-path: inset(0 0 100% 0); visibility: hidden; } }
-
     /* Scroll progress */
     .progress {
       position: fixed; top: 0; left: 0; right: 0; height: 3px; z-index: 60; pointer-events: none;
@@ -388,7 +366,7 @@
     }
 
     .topbar { transition: box-shadow .35s, background-color .35s; }
-    .topbar.scrolled { box-shadow: 0 8px 28px rgba(15,23,42,.07); background: rgba(255,255,255,.82); }
+    .topbar.scrolled { box-shadow: 0 8px 28px rgba(0,0,0,.5); background: rgba(5,6,15,.86); }
 
     .brand-mark { background: linear-gradient(135deg, #4338ca, #6366f1, #7c3aed, #4338ca); background-size: 300% 300%; transition: transform .5s var(--spring); }
     .motion .brand-mark { animation: grad-pan 8s ease infinite; }
@@ -479,25 +457,6 @@
     /* Hero */
     #hero { position: relative; overflow: hidden; isolation: isolate; }
     .hero-grid { will-change: transform; }
-    .hero-fx { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
-    .hero-fx canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-    .hero-fx .blobs { position: absolute; inset: 0; transition: translate 1.2s var(--ease); }
-    .hero-fx .dots {
-      position: absolute; inset: 0;
-      background-image: radial-gradient(rgba(15,23,42,.09) 1px, transparent 1px); background-size: 26px 26px;
-      -webkit-mask-image: radial-gradient(ellipse 60% 70% at 75% 25%, #000, transparent 75%);
-              mask-image: radial-gradient(ellipse 60% 70% at 75% 25%, #000, transparent 75%);
-      animation: dots-pan 30s linear infinite;
-    }
-    @keyframes dots-pan { to { background-position: 26px 26px; } }
-    .blob { position: absolute; border-radius: 50%; filter: blur(64px); will-change: transform; }
-    .blob.b1 { width: 440px; height: 440px; background: #c7d2fe; opacity: .6; top: -160px; right: -60px; animation: drift1 18s ease-in-out infinite alternate; }
-    .blob.b2 { width: 340px; height: 340px; background: #fbcfe8; opacity: .4; bottom: -140px; left: 35%; animation: drift2 22s ease-in-out infinite alternate; }
-    .blob.b3 { width: 280px; height: 280px; background: #a5f3fc; opacity: .35; top: 25%; left: -100px; animation: drift3 20s ease-in-out infinite alternate; }
-    @keyframes drift1 { to { transform: translate(-140px, 90px) scale(1.15); } }
-    @keyframes drift2 { to { transform: translate(160px, -70px) scale(.88); } }
-    @keyframes drift3 { to { transform: translate(90px, -110px) scale(1.22); } }
-
     .pill .dot { position: relative; }
     .motion .pill .dot::after {
       content: ''; position: absolute; inset: 0; border-radius: 50%; background: var(--ok);
@@ -514,12 +473,6 @@
     .hero-roles .role.on::after { transform: scaleX(1); transform-origin: left; }
 
     .motion .hero-title em { position: relative; display: inline-block; }
-    .motion .hero-title em .w > span {
-      background: linear-gradient(90deg, #4338ca, #7c3aed, #db2777, #4338ca); background-size: 300% 100%;
-      -webkit-background-clip: text; background-clip: text; color: transparent;
-      animation: shimmer 7s linear infinite;
-    }
-    @keyframes shimmer { to { background-position: 300% 0; } }
     .motion .hero-title em::after {
       content: ''; position: absolute; left: 0; right: 0; bottom: .02em; height: .11em; border-radius: 99px;
       background: linear-gradient(90deg, #4338ca, #7c3aed, #db2777); opacity: .28;
@@ -551,14 +504,7 @@
     .proof-item:hover .proof-num { transform: scale(1.1); }
 
     /* Section ambience */
-    section.alt { position: relative; overflow: hidden; isolation: isolate; }
-    .motion section.alt::before {
-      content: ''; position: absolute; z-index: -1; width: 640px; height: 640px; border-radius: 50%; top: -220px; left: -220px;
-      background: radial-gradient(circle, rgba(99,102,241,.09), transparent 70%); pointer-events: none;
-      animation: roam 26s ease-in-out infinite alternate;
-    }
-    @keyframes roam { to { transform: translate(calc(100vw - 320px), 260px); } }
-
+    
     /* Fit cards */
     .fit-icon { transition: transform .55s var(--spring), background-color .3s, color .3s, box-shadow .3s; }
     .fit-card:hover .fit-icon { transform: rotate(-10deg) scale(1.12); background: var(--accent); color: #fff; box-shadow: 0 8px 20px -4px rgba(67,56,202,.5); }
@@ -578,13 +524,13 @@
     .motion .card.in .thumb img { clip-path: inset(0 0 0 0); scale: 1; }
     .thumb::after {
       content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.45) 50%, transparent 65%);
+      background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.18) 50%, transparent 65%);
       translate: -100% 0; transition: translate 1s var(--ease);
     }
     .card:hover .thumb::after { translate: 100% 0; }
 
     .thumb-icon {
-      background-image: radial-gradient(rgba(67,56,202,.13) 1px, transparent 1px), linear-gradient(135deg, var(--accent-soft), #fff 70%);
+      background-image: radial-gradient(rgba(67,56,202,.13) 1px, transparent 1px), linear-gradient(135deg, var(--accent-soft), transparent 70%);
       background-size: 18px 18px, auto;
     }
     .motion .thumb-icon { animation: grid-pan 14s linear infinite; }
@@ -648,12 +594,14 @@
     .achievement { position: relative; overflow: hidden; }
     .motion .achievement::before {
       content: ''; position: absolute; inset: 0; pointer-events: none;
-      background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.75) 50%, transparent 60%);
+      background: linear-gradient(110deg, transparent 40%, rgba(255,255,255,.14) 50%, transparent 60%);
       translate: -100% 0; animation: sweep 4s var(--ease) 1.2s infinite;
     }
     @keyframes sweep { 0% { translate: -100% 0; } 55%, 100% { translate: 100% 0; } }
 
     /* Contact */
+    @keyframes drift1 { to { transform: translate(-140px, 90px) scale(1.15); } }
+    @keyframes drift2 { to { transform: translate(160px, -70px) scale(.88); } }
     .contact-card { position: relative; overflow: hidden; isolation: isolate; }
     .contact-fx { position: absolute; inset: 0; z-index: -1; pointer-events: none; }
     .contact-fx i { position: absolute; border-radius: 50%; filter: blur(70px); }
@@ -667,7 +615,7 @@
     .cursor, .cursor-dot { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 300; border-radius: 50%; transition: opacity .3s; }
     .cursor-dot { width: 6px; height: 6px; margin: -3px 0 0 -3px; background: var(--accent); }
     .cursor {
-      width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1.5px solid rgba(67,56,202,.45);
+      width: 34px; height: 34px; margin: -17px 0 0 -17px; border: 1.5px solid rgba(165,152,255,.6);
       transition: width .35s var(--ease), height .35s var(--ease), margin .35s var(--ease), background-color .3s, border-color .3s, opacity .3s;
     }
     .cursor.hot { width: 58px; height: 58px; margin: -29px 0 0 -29px; background: rgba(99,102,241,.1); border-color: rgba(67,56,202,.15); }
@@ -678,7 +626,7 @@
     /* Back to top */
     .to-top {
       position: fixed; right: 20px; bottom: 20px; z-index: 40; width: 48px; height: 48px; border-radius: 50%;
-      background: #fff; border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--accent);
+      background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); color: var(--accent);
       display: grid; place-items: center; cursor: pointer;
       opacity: 0; translate: 0 16px; pointer-events: none;
       transition: opacity .4s var(--ease), translate .4s var(--ease), transform .35s var(--spring);
@@ -688,6 +636,120 @@
     .to-top svg.arrow { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
     .to-top svg.ring { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); transform: rotate(-90deg); }
     .to-top .ring circle { fill: none; stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 138.2px; stroke-dashoffset: calc(138.2px * (1 - var(--p, 0))); }
+
+    /* ===== Action layer ===== */
+
+    html { background: radial-gradient(1000px 600px at 80% 0%, #1e1b5e, transparent 70%), radial-gradient(800px 600px at 0% 60%, #3b0d4a, transparent 70%), var(--bg); background-attachment: fixed; }
+    html, body { overflow-x: clip; }
+    body { background: transparent; }
+    section { position: relative; isolation: isolate; }
+    section.alt { background: rgba(255,255,255,.015); overflow: clip; }
+
+    #stage-gl { position: fixed; inset: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none; }
+
+    /* Intro */
+    .motion:not(.seen):not(.intro-live) body::before { content: ''; position: fixed; inset: 0; z-index: 1000; background: var(--bg); }
+    #intro { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 1000; pointer-events: none; }
+    .intro-hud {
+      position: fixed; inset: 0; z-index: 1001; pointer-events: none; padding: 28px; display: flex; flex-direction: column; justify-content: space-between;
+      font: 500 .76rem/1.4 var(--mono); letter-spacing: .14em; text-transform: uppercase; color: #a3adc8; transition: opacity .25s;
+    }
+    .intro-hud div { display: flex; justify-content: space-between; gap: 20px; }
+    .intro-hud b { color: #fff; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    /* Hero */
+    #hero { min-height: calc(100svh - 65px); display: flex; align-items: center; background: none; perspective: 1400px; }
+    #hero > .container { width: 100%; }
+    .hero-grid { transform-origin: 50% 0; }
+    .hero-lede, .hero-roles, .section-lede { text-shadow: 0 1px 14px rgba(5,6,15,.9), 0 0 3px rgba(5,6,15,.6); }
+    h1.hero-title { font-size: clamp(2.6rem, 5.2vw, 4.5rem); line-height: 1.04; text-shadow: 0 0 60px rgba(139,124,255,.35); }
+    .chars .w { display: inline-block; white-space: nowrap; }
+    .chars .c { display: inline-block; will-change: transform; }
+    .motion .chars .c {
+      opacity: 0; translate: 0 .8em; scale: 1.7; filter: blur(14px);
+      transition: opacity .7s var(--ease), translate 1s var(--ease), scale 1s var(--ease), filter .8s var(--ease);
+      transition-delay: calc(var(--ci, 0) * 26ms);
+    }
+    .motion .chars.in .c { opacity: 1; translate: 0 0; scale: 1; filter: blur(0); }
+    .motion .hero-title em .c { animation: char-wave 5s linear infinite; animation-delay: calc(var(--ci, 0) * -.16s); }
+    @keyframes char-wave { 0%, 100% { color: #8b7cff; } 33% { color: #22d3ee; } 66% { color: #f472b6; } }
+    .motion .hero-title em::after { opacity: .85; bottom: -.1em; height: .05em; box-shadow: 0 0 22px rgba(139,124,255,.8); }
+
+    /* Ghost section numbers */
+    .ghost {
+      position: absolute; right: 2vw; top: 12px; z-index: -1; pointer-events: none; user-select: none;
+      font-size: clamp(8rem, 24vw, 22rem); font-weight: 800; line-height: 1; letter-spacing: -.05em;
+      color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.08); will-change: transform;
+    }
+
+    /* Kinetic marquee */
+    .marquee { overflow: clip; width: 106vw; margin-left: -3vw; padding: 22px 0; rotate: -1.5deg; border-block: 1px solid var(--line); background: rgba(5,6,15,.55); }
+    .marquee-track { display: flex; width: max-content; will-change: transform; }
+    .marquee span {
+      padding-right: .5em; font-size: clamp(2.6rem, 7vw, 6rem); font-weight: 800; line-height: 1.1; letter-spacing: -.03em; white-space: nowrap;
+      color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,.32);
+    }
+    .marquee span:nth-child(3n+1) { color: var(--accent); -webkit-text-stroke: 0; text-shadow: 0 0 30px rgba(139,124,255,.55); }
+
+    /* Holographic borders */
+    @property --ang { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+    .motion .fit-card::before, .motion .card::before, .motion .contact-card::before {
+      content: ''; position: absolute; inset: 0; z-index: 2; border-radius: inherit; padding: 1.5px; pointer-events: none;
+      background: conic-gradient(from var(--ang), #8b7cff, #22d3ee, #f472b6, #fbbf24, #8b7cff);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: 0; transition: opacity .4s; animation: holo 4s linear infinite paused;
+    }
+    .motion .fit-card:hover::before, .motion .card:hover::before, .motion .card.current::before, .motion .contact-card::before { opacity: 1; animation-play-state: running; }
+    @keyframes holo { to { --ang: 360deg; } }
+    .motion .fit-card:hover, .motion .card:hover { --lift: -8px; box-shadow: 0 30px 70px -20px rgba(139,124,255,.55); }
+
+    /* Punchier reveals */
+    .fit-grid, .projects-grid, .skills-grid { perspective: 1400px; }
+    .motion .fit-card.rv { --ry0: 90px; --rs0: .86; rotate: 1 0 0 22deg; transition-property: opacity, translate, scale, rotate, transform, box-shadow, border-color, background-color; }
+    .motion .fit-card.rv.in { rotate: 1 0 0 0deg; }
+    .motion .tilt { transform: perspective(1000px) translateZ(var(--pz, 0px)) rotateX(var(--tiltX, 0deg)) rotateY(calc(var(--tiltY, 0deg) + var(--flow, 0deg))) translateY(var(--lift, 0px)); }
+
+    /* Image glitch on hover */
+    .card:hover .thumb img { animation: glitch .55s steps(2) 1; }
+    @keyframes glitch {
+      0%, 100% { translate: 0 0; filter: none; }
+      20% { translate: -5px 2px; filter: hue-rotate(70deg) saturate(1.8); }
+      45% { translate: 5px -2px; filter: hue-rotate(-60deg) contrast(1.3); }
+      70% { translate: -2px 0; filter: saturate(1.5); }
+    }
+
+    /* Pinned horizontal projects */
+    .pin-count { display: none; }
+    @media screen {
+      #projects.pinned { padding: 0; scroll-margin-top: -23px; }
+      #projects.pinned .pin-stage {
+        position: sticky; top: 65px; height: calc(100vh - 65px); width: 100vw; margin-left: calc(50% - 50vw); overflow: clip; display: flex; align-items: center; perspective: 1600px;
+      }
+      #projects.pinned .pin-track { display: flex; align-items: center; gap: 56px; width: max-content; padding-inline: max(24px, calc((100vw - 1120px) / 2 + 24px)); will-change: transform; }
+      #projects.pinned .pin-head { width: 400px; flex: none; }
+      #projects.pinned .pin-head h2.title { font-size: clamp(2.6rem, 4.6vw, 4rem); }
+      #projects.pinned .pin-head .section-lede { margin-bottom: 24px; }
+      #projects.pinned .projects-grid { display: flex; gap: 32px; }
+      #projects.pinned .card { width: 430px; flex: none; }
+      #projects.pinned .card.rv { transition-duration: .8s, .8s, .8s, .25s, .35s, .35s, .35s; }
+      #projects.pinned .pin-count { display: flex; align-items: center; gap: 14px; font: 600 .84rem/1 var(--mono); color: var(--muted); }
+      #projects.pinned .pin-count i { width: 130px; height: 2px; background: var(--line); position: relative; overflow: hidden; }
+      #projects.pinned .pin-count i::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, #8b7cff, #22d3ee); transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+      #projects.pinned .notebooks { margin: 56px 0 88px; }
+    }
+    @media screen and (max-height: 780px) {
+      #projects.pinned .thumb { aspect-ratio: 16 / 7; }
+    }
+
+    /* Experience beam */
+    .motion .exp-card::before { width: 3px; scale: 1 var(--beam, 0); transition: none; box-shadow: 0 0 18px #8b7cff; }
+    .motion .exp-list li { color: var(--faint); transition: opacity .7s var(--ease) var(--sd), translate .7s var(--ease) var(--sd), color .4s, transform .35s var(--spring); }
+    .motion .exp-list li.lit { color: var(--ink); }
+    .motion .exp-list li.lit::before { opacity: 1; box-shadow: 0 0 12px var(--accent); }
+
+    /* Comet cursor */
+    #trail { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 290; pointer-events: none; }
 
     /* ===== Responsive ===== */
 
@@ -724,12 +786,18 @@
     }
 
     @media print {
+      :root { color-scheme: light; --bg: #fff; --surface: #fff; --soft: #f6f7fb; --ink: #0f172a; --muted: #475569; --faint: #64748b; --line: #e2e8f0; --accent: #4338ca; --accent-soft: #eef2ff; --ok: #047857; --ok-soft: #ecfdf5; }
+      html { background: #fff; }
+      #stage-gl, #trail, #intro, .intro-hud, .ghost, .marquee, .pin-count { display: none !important; }
+      .pin-outer { height: auto !important; }
+      .pin-track { transform: none !important; }
+      .chars .c { opacity: 1 !important; translate: none !important; scale: none !important; filter: none !important; color: inherit !important; }
       .topbar, .hero-actions, .skip-link, .card-actions { display: none; }
       section { padding: 24px 0; break-inside: avoid; }
       .contact-card { background: #fff; color: #000; border: 1px solid #ccc; }
       .contact-card p { color: #333; }
       .contact-actions { display: none; }
-      .progress, .to-top, .cursor, .cursor-dot, .hero-fx, .contact-fx { display: none; }
+      .progress, .to-top, .cursor, .cursor-dot, .contact-fx { display: none; }
       .rv, .stg > *, .split .w > span, .card .thumb img { opacity: 1 !important; translate: none !important; scale: none !important; clip-path: none !important; }
     }
 
@@ -852,9 +920,13 @@
   <!-- ===== Projects ===== -->
   <section id="projects">
     <div class="container">
-      <p class="eyebrow">Projects</p>
-      <h2 class="title">Selected work.</h2>
-      <p class="section-lede">Live apps you can open right now, plus source code for everything.</p>
+      <div class="pin-outer"><div class="pin-stage"><div class="pin-track">
+      <div class="pin-head">
+        <p class="eyebrow">Projects</p>
+        <h2 class="title">Selected work.</h2>
+        <p class="section-lede">Live apps you can open right now, plus source code for everything.</p>
+        <p class="pin-count" aria-hidden="true"><span>01</span><i></i><span>06</span></p>
+      </div>
 
       <div class="projects-grid">
 
@@ -956,6 +1028,7 @@
         </article>
 
       </div>
+      </div></div></div>
 
       <div class="notebooks">
         <h3>Data science &amp; ML notebooks</h3>
@@ -1185,7 +1258,6 @@
   const topbar = $('.topbar');
   const hero = $('#hero');
   const heroGrid = $('.hero-grid');
-  let heroFx = null;
   let scrollQueued = false;
 
   function onScroll() {
@@ -1198,9 +1270,9 @@
     topbar.classList.toggle('scrolled', y > 8);
     toTop.classList.toggle('show', y > 600);
     if (motion && y < hero.offsetHeight) {
-      heroGrid.style.transform = `translateY(${y * 0.12}px)`;
-      heroGrid.style.opacity = Math.max(0, 1 - y / (hero.offsetHeight * 1.3));
-      if (heroFx) heroFx.style.transform = `translateY(${y * 0.35}px)`;
+      const hp = y / hero.offsetHeight;
+      heroGrid.style.transform = `translate3d(0, ${y * 0.22}px, ${hp * -220}px) rotateX(${hp * 16}deg)`;
+      heroGrid.style.opacity = Math.max(0, 1 - hp * 1.25);
     }
   }
   addEventListener('scroll', () => {
@@ -1261,8 +1333,32 @@
     // Hero sequence
     tag('#hero .pill', 'rv', 0);
     tag('#hero .hero-roles', 'rv', .08);
-    splitWords($('.hero-title'));
-    $('.hero-title').style.setProperty('--d', '.15s');
+    (function splitChars(el) {
+      el.setAttribute('aria-label', el.textContent);
+      let ci = 0;
+      const walk = node => [...node.childNodes].forEach(n => {
+        if (n.nodeType === 1) return walk(n);
+        if (n.nodeType !== 3) return;
+        const frag = document.createDocumentFragment();
+        n.textContent.split(/(\s+)/).forEach(part => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) return frag.append(' ');
+          const w = document.createElement('span');
+          w.className = 'w';
+          [...part].forEach(ch => {
+            const c = document.createElement('span');
+            c.className = 'c';
+            c.textContent = ch;
+            c.style.setProperty('--ci', ci++);
+            w.append(c);
+          });
+          frag.append(w);
+        });
+        n.replaceWith(frag);
+      });
+      walk(el);
+      el.classList.add('chars');
+    })($('.hero-title'));
     tag('#hero .hero-lede', 'rv', .45);
     tag('#hero .hero-actions', 'rv', .55);
     tag('#hero .hero-links', 'rv', .65);
@@ -1278,12 +1374,16 @@
     tag('.fit-card', 'rv tilt spot', .1, .12);
     $$('.fit-icon, .thumb-icon .ico').forEach(el => el.classList.add('draw'));
     stagger('.fit-proof', { '--base': '.45s', '--step': '110ms', '--sx': '-12px', '--sy': '0px' });
-    tag('.card', 'rv tilt spot', 0, .1, 3);
+    tag('.card', 'rv tilt spot', 0, .05, 3);
     stagger('.card .tags', { '--base': '.45s', '--step': '50ms', '--sy': '8px' });
     tag('.notebooks', 'rv spot');
     stagger('.chip-list', { '--step': '60ms' });
     tag('.skill-block', 'rv spot', 0, .1, 2);
-    stagger('.pills', { '--base': '.25s', '--step': '45ms', '--sy': '10px' });
+    stagger('.pills', { '--base': '.25s', '--step': '45ms' });
+    $$('.pills > *').forEach(p => {
+      p.style.setProperty('--sx', (Math.random() - .5) * 340 + 'px');
+      p.style.setProperty('--sy', (Math.random() - .5) * 200 + 'px');
+    });
     tag('.exp-card', 'rv spot');
     stagger('.exp-list', { '--base': '.3s', '--step': '90ms', '--sx': '-16px', '--sy': '0px' });
     stagger('.exp-card > div > .tags', { '--base': '.9s', '--step': '50ms' });
@@ -1293,7 +1393,7 @@
     tag('.contact-card', 'rv rv-zoom spot');
     tag('.contact-card p', 'rv', .35);
     stagger('.contact-actions', { '--base': '.4s', '--step': '90ms', '--sx': '24px', '--sy': '0px' });
-    tag('footer .footer-inner', 'rv');
+    tag('footer', 'rv');
 
     // Stroke lengths for line-drawing icons
     $$('.draw svg *').forEach(el => {
@@ -1336,6 +1436,18 @@
       };
       requestAnimationFrame(step);
     }
+    // Eyebrows decode from scrambled glyphs
+    function scramble(el) {
+      const raw = el.textContent, glyphs = '!<>-_/[]{}=+*^?#ABCDEF0123456789';
+      const t0 = performance.now();
+      requestAnimationFrame(function step(now) {
+        const done = Math.floor(raw.length * Math.min(1, (now - t0) / 750));
+        el.textContent = [...raw].map((c, i) => i < done || c === ' ' ? c : glyphs[(Math.random() * glyphs.length) | 0]).join('');
+        if (done < raw.length) requestAnimationFrame(step);
+      });
+    }
+    $$('.eyebrow').forEach(el => el.addEventListener('reveal', () => scramble(el)));
+
     $('.proof').addEventListener('reveal', () => $$('.proof-num').forEach((el, i) => setTimeout(() => countUp(el), 300 + i * 120)));
 
     // Typewriter captions on icon thumbnails
@@ -1357,7 +1469,7 @@
 
     const roles = $$('.hero-roles .role');
     const startHero = () => {
-      $$('.rv, .split, .stg', hero).forEach(show);
+      $$('.rv, .chars, .stg', hero).forEach(show);
       let r = 0;
       setTimeout(function cycle() {
         roles.forEach((el, i) => el.classList.toggle('on', i === r));
@@ -1365,87 +1477,381 @@
         setTimeout(cycle, 2200);
       }, 1400);
     };
-    setTimeout(startHero, document.documentElement.classList.contains('seen') ? 60 : 900);
 
-    /* ===== Hero background: aurora, dot grid, particle network ===== */
+    /* ===== Stage: fullscreen WebGL field behind the whole page ===== */
 
-    heroFx = document.createElement('div');
-    heroFx.className = 'hero-fx';
-    heroFx.setAttribute('aria-hidden', 'true');
-    heroFx.innerHTML = '<div class="blobs"><i class="blob b1"></i><i class="blob b2"></i><i class="blob b3"></i></div><div class="dots"></div><canvas></canvas>';
-    hero.prepend(heroFx);
-
-    const blobs = $('.blobs', heroFx);
-    const cv = $('canvas', heroFx);
-    const ctx = cv.getContext('2d');
-    const mouse = { x: -1e4, y: -1e4 };
-    let W = 0, H = 0, pts = [], running = false;
-
-    function sizeCanvas() {
-      const dpr = Math.min(devicePixelRatio || 1, 2);
-      W = hero.offsetWidth;
-      H = hero.offsetHeight;
-      cv.width = W * dpr;
-      cv.height = H * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const n = Math.min(80, Math.round((W * H) / 15000));
-      pts = Array.from({ length: n }, () => ({
-        x: Math.random() * W, y: Math.random() * H,
-        vx: (Math.random() - .5) * .35, vy: (Math.random() - .5) * .35,
-        r: Math.random() * 1.6 + .7
-      }));
-    }
-
-    function frame() {
-      if (!running) return;
-      ctx.clearRect(0, 0, W, H);
-      for (const p of pts) {
-        const dx = p.x - mouse.x, dy = p.y - mouse.y, d = Math.hypot(dx, dy);
-        if (d < 120 && d > 0) { p.x += (dx / d) * 1.2; p.y += (dy / d) * 1.2; }
-        p.x += p.vx; p.y += p.vy;
-        if (p.x < 0) p.x += W; else if (p.x > W) p.x -= W;
-        if (p.y < 0) p.y += H; else if (p.y > H) p.y -= H;
-      }
-      ctx.lineWidth = 1;
-      for (let i = 0; i < pts.length; i++) {
-        const a = pts[i];
-        for (let j = i + 1; j < pts.length; j++) {
-          const b = pts[j], d = Math.hypot(a.x - b.x, a.y - b.y);
-          if (d < 120) {
-            ctx.strokeStyle = `rgba(67,56,202,${(1 - d / 120) * .16})`;
-            ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-          }
-        }
-        const md = Math.hypot(a.x - mouse.x, a.y - mouse.y);
-        if (md < 180) {
-          ctx.strokeStyle = `rgba(124,58,237,${(1 - md / 180) * .35})`;
-          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(mouse.x, mouse.y); ctx.stroke();
-        }
-        ctx.fillStyle = 'rgba(67,56,202,.38)';
-        ctx.beginPath(); ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2); ctx.fill();
-      }
-      requestAnimationFrame(frame);
-    }
-
-    const setRunning = on => {
-      if (on && !running) { running = true; requestAnimationFrame(frame); }
-      running = on;
+    const PALETTES = {
+      hero: [[.10, .07, .42], [.62, .16, .78], [.13, .83, .93], fine ? .62 : .42],
+      fit: [[.09, .04, .34], [.45, .18, .85], [.96, .45, .71], .5],
+      projects: [[.02, .12, .34], [.05, .50, .78], [.55, .49, 1], .55],
+      skills: [[.01, .17, .20], [.05, .58, .50], [.63, .90, .30], .5],
+      experience: [[.26, .05, .13], [.85, .25, .30], [.98, .75, .14], .5],
+      education: [[.05, .08, .36], [.25, .32, .90], [.13, .83, .93], .45],
+      contact: [[.20, .03, .34], [.90, .15, .58], [.55, .49, 1], .62]
     };
-    let heroVisible = true;
-    new IntersectionObserver(([e]) => { heroVisible = e.isIntersecting; setRunning(heroVisible && !document.hidden); }).observe(hero);
-    document.addEventListener('visibilitychange', () => setRunning(heroVisible && !document.hidden));
+    const pal = { a: [...PALETTES.hero[0]], b: [...PALETTES.hero[1]], c: [...PALETTES.hero[2]], gain: PALETTES.hero[3], target: PALETTES.hero };
 
-    let resizeTimer;
-    new ResizeObserver(() => { clearTimeout(resizeTimer); resizeTimer = setTimeout(sizeCanvas, 150); }).observe(hero);
-    sizeCanvas();
+    const palObs = new IntersectionObserver(entries => entries.forEach(e => {
+      if (e.isIntersecting && PALETTES[e.target.id]) pal.target = PALETTES[e.target.id];
+    }), { rootMargin: '-45% 0px -50% 0px' });
+    sections.forEach(s => palObs.observe(s));
 
-    hero.addEventListener('pointermove', e => {
-      const r = hero.getBoundingClientRect();
-      mouse.x = e.clientX - r.left;
-      mouse.y = e.clientY - r.top;
-      blobs.style.translate = `${(mouse.x / W - .5) * 40}px ${(mouse.y / H - .5) * 40}px`;
+    const shocks = [[0, 0, -1], [0, 0, -1], [0, 0, -1], [0, 0, -1]];
+    let shockIdx = 0;
+    const shock = (x, y) => {
+      shocks[shockIdx] = [(x - innerWidth / 2) / innerHeight, (innerHeight / 2 - y) / innerHeight, 0];
+      shockIdx = (shockIdx + 1) % shocks.length;
+    };
+    const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+    let warp = 0;
+
+    const stage = (() => {
+      const cv = document.createElement('canvas');
+      cv.id = 'stage-gl';
+      cv.setAttribute('aria-hidden', 'true');
+      const gl = cv.getContext('webgl', { antialias: false, alpha: false, depth: false, stencil: false });
+      if (!gl) return null;
+      const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+      const fs = `precision highp float;
+        uniform vec2 R,M;uniform float T,V,G;uniform vec3 A,B,C;uniform vec3 S[4];
+        float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+        float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
+          return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+        float fbm(vec2 p){float a=.5,s=0.;mat2 m=mat2(.8,.6,-.6,.8);
+          for(int i=0;i<4;i++){s+=a*n(p);p=m*p*2.03;a*=.5;}return s;}
+        void main(){
+          vec2 uv=(gl_FragCoord.xy-.5*R)/R.y,p=uv;float ring=0.;
+          for(int i=0;i<4;i++){vec3 s=S[i];if(s.z>=0.){vec2 d=p-s.xy;float r=length(d),w=s.z*1.5;
+            float k=exp(-pow((r-w)*8.,2.))*exp(-s.z*2.4);p+=d/(r+.001)*k*.16;ring+=k;}}
+          vec2 md=p-M;p-=md*exp(-dot(md,md)*8.)*.22;
+          float t=T*.07;
+          vec2 q=vec2(fbm(p*1.5+t),fbm(p*1.5-t+5.2));
+          vec2 r=vec2(fbm(p*1.6+3.*q+vec2(1.7,9.2)+t*1.4),fbm(p*1.6+3.*q+vec2(8.3,2.8)-t*1.1));
+          float f=fbm(p*1.4+3.4*r);
+          vec3 c=mix(A*.35,A,smoothstep(.2,.5,f));
+          c=mix(c,B,smoothstep(.45,.8,f));
+          c+=C*pow(1.-abs(2.*f-1.),9.)*.55;
+          c+=C*pow(max(0.,length(r)-.7),2.)*.9;
+          c*=G*(.75+.25*smoothstep(.0,.3,length(q)));
+          vec2 g=uv*42.;vec2 gi=floor(g);float st=h(gi);
+          c+=vec3(.9,.95,1.)*step(.985,st)*smoothstep(.2,.0,length(fract(g)-.5))*(.5+.5*sin(T*2.+st*90.))*.7;
+          float a=atan(uv.y,uv.x),rr=length(uv),id=floor(a*48.);float sp=h(vec2(id,3.));
+          float streak=smoothstep(.93,1.,fract(rr*(1.+sp)*1.2-T*(1.+sp)*1.6+sp*9.))*step(.45,sp)*smoothstep(.5,.0,abs(fract(a*48.)-.5));
+          c+=mix(C,vec3(1.),.5)*streak*V*smoothstep(.05,.5,rr)*1.5;
+          c+=mix(C,vec3(1.),.4)*ring*.9;
+          c*=1.-dot(uv*.75,uv*.75)*.75;
+          c=c/(1.+c*.35);
+          c+=(h(gl_FragCoord.xy+T)-.5)*.022;
+          gl_FragColor=vec4(c,1.);
+        }`;
+      const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+      const prog = gl.createProgram();
+      gl.attachShader(prog, compile(gl.VERTEX_SHADER, vs));
+      gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, fs));
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null;
+      gl.useProgram(prog);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+      gl.enableVertexAttribArray(0);
+      gl.bindAttribLocation(prog, 0, 'p');
+      gl.linkProgram(prog);
+      gl.useProgram(prog);
+      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+      const U = {};
+      ['R', 'M', 'T', 'V', 'G', 'A', 'B', 'C', 'S'].forEach(n => { U[n] = gl.getUniformLocation(prog, n); });
+      let scale = fine ? .6 : .4;
+      const size = () => {
+        cv.width = Math.max(2, innerWidth * scale | 0);
+        cv.height = Math.max(2, innerHeight * scale | 0);
+        gl.viewport(0, 0, cv.width, cv.height);
+      };
+      size();
+      document.body.prepend(cv);
+      addEventListener('resize', size);
+      cv.addEventListener('webglcontextlost', () => cv.remove());
+      // Drop resolution on slow GPUs rather than dropping frames
+      let slow = 0, n = 0;
+      return {
+        draw(t, dt) {
+          if (++n > 30 && scale > .25) {
+            slow = dt > 30 ? slow + 1 : Math.max(0, slow - 1);
+            if (slow > 30) { scale = Math.max(.25, scale - .15); slow = 0; size(); }
+          }
+          gl.uniform2f(U.R, cv.width, cv.height);
+          gl.uniform2f(U.M, ptr.x, ptr.y);
+          gl.uniform1f(U.T, t);
+          gl.uniform1f(U.V, warp);
+          gl.uniform1f(U.G, pal.gain);
+          gl.uniform3fv(U.A, pal.a);
+          gl.uniform3fv(U.B, pal.b);
+          gl.uniform3fv(U.C, pal.c);
+          gl.uniform3fv(U.S, shocks.flat());
+          gl.drawArrays(gl.TRIANGLES, 0, 3);
+        }
+      };
+    })();
+
+    addEventListener('pointermove', e => {
+      ptr.tx = (e.clientX - innerWidth / 2) / innerHeight;
+      ptr.ty = (innerHeight / 2 - e.clientY) / innerHeight;
+    }, { passive: true });
+    addEventListener('pointerdown', e => shock(e.clientX, e.clientY), { passive: true });
+
+    /* ===== Kinetic marquees and ghost numbers ===== */
+
+    const WORDS = ['JavaScript', 'Python', 'Supabase', 'Machine Learning', 'RAG', 'Docker', 'React', 'PostgreSQL', 'Cloudflare'];
+    const marquees = [['#fit', 1], ['#experience', -1]].map(([sel, dir]) => {
+      const el = document.createElement('div');
+      el.className = 'marquee';
+      el.setAttribute('aria-hidden', 'true');
+      const words = dir > 0 ? WORDS : [...WORDS].reverse();
+      el.innerHTML = '<div class="marquee-track">' + [...words, ...words].map(w => `<span>${w} ✦</span>`).join('') + '</div>';
+      $(sel).after(el);
+      return { track: el.firstChild, dir, off: 0 };
     });
-    hero.addEventListener('pointerleave', () => { mouse.x = mouse.y = -1e4; blobs.style.translate = '0 0'; });
+
+    const ghosts = ['fit', 'skills', 'experience', 'education'].map((id, i) => {
+      const g = document.createElement('span');
+      g.className = 'ghost';
+      g.setAttribute('aria-hidden', 'true');
+      g.textContent = '0' + (i + 1);
+      $('#' + id).prepend(g);
+      return g;
+    });
+
+    /* ===== Pinned horizontal projects ===== */
+
+    const projects = $('#projects');
+    const pin = { on: false, outer: $('.pin-outer'), stage: $('.pin-stage'), track: $('.pin-track'), cards: $$('#projects .card'), count: $('.pin-count'), max: 0, dist: 0, top: 0, x: 0, centers: [], cur: -1 };
+
+    function layoutPin() {
+      pin.track.style.transform = '';
+      pin.outer.style.height = '';
+      pin.on = false;
+      projects.classList.remove('pinned');
+      pin.cards.forEach(c => { c.style.removeProperty('--flow'); c.style.removeProperty('--pz'); c.classList.remove('current'); });
+      if (innerWidth < 1000 || innerHeight < 620) return;
+      projects.classList.add('pinned');
+      const h = pin.stage.clientHeight;
+      if (Math.max(...pin.cards.map(c => c.offsetHeight)) > h - 24) { projects.classList.remove('pinned'); return; }
+      pin.max = pin.track.scrollWidth - innerWidth;
+      pin.dist = pin.max;
+      pin.outer.style.height = h + pin.dist + 'px';
+      pin.top = pin.outer.getBoundingClientRect().top + scrollY - 65;
+      pin.centers = pin.cards.map(c => { const r = c.getBoundingClientRect(); return r.left + r.width / 2; });
+      pin.on = true;
+    }
+    pin.cards.forEach((card, i) => card.addEventListener('focusin', () => {
+      if (pin.on) scrollTo({ top: pin.top + Math.min(pin.dist, Math.max(0, pin.centers[i] - innerWidth / 2)) });
+    }));
+    let pinTimer;
+    addEventListener('resize', () => { clearTimeout(pinTimer); pinTimer = setTimeout(layoutPin, 150); });
+    addEventListener('load', () => {
+      layoutPin();
+      if (pin.on && location.hash === '#projects') scrollTo({ top: pin.top, behavior: 'instant' });
+    });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(layoutPin);
+    layoutPin();
+
+    function drawPin(dt) {
+      const target = Math.max(0, Math.min(pin.dist, scrollY - pin.top));
+      pin.x += (target - pin.x) * (1 - Math.exp(-dt / 110));
+      pin.track.style.transform = `translate3d(${-pin.x}px, 0, 0)`;
+      let best = -1, bestD = 1e9;
+      pin.cards.forEach((c, i) => {
+        const d = (pin.centers[i] - pin.x - innerWidth / 2) / innerWidth;
+        c.style.setProperty('--flow', Math.max(-1, Math.min(1, d)) * -22 + 'deg');
+        c.style.setProperty('--pz', -Math.min(1, Math.abs(d)) * 130 + 'px');
+        if (Math.abs(d) < bestD) { bestD = Math.abs(d); best = i; }
+      });
+      if (best !== pin.cur) {
+        pin.cards.forEach((c, i) => c.classList.toggle('current', i === best));
+        pin.count.firstChild.textContent = String(best + 1).padStart(2, '0');
+        pin.cur = best;
+      }
+      pin.count.style.setProperty('--p', pin.dist ? pin.x / pin.dist : 0);
+    }
+
+    /* ===== Experience beam ===== */
+
+    const expCard = $('.exp-card');
+    const expItems = $$('.exp-list li');
+    function drawBeam() {
+      const r = expCard.getBoundingClientRect();
+      if (r.bottom < -200 || r.top > innerHeight + 200) return;
+      const p = Math.max(0, Math.min(1, (innerHeight * .8 - r.top) / r.height));
+      expCard.style.setProperty('--beam', p);
+      const edge = r.top + r.height * p;
+      expItems.forEach(li => li.classList.toggle('lit', li.getBoundingClientRect().top < edge));
+    }
+
+    /* ===== Hero: title reacts to the pointer ===== */
+
+    const chars = $$('.hero-title .c');
+    let charPos = null;
+    const heroPtr = { x: -1e4, y: -1e4 };
+    const measureChars = () => {
+      charPos = chars.map(c => {
+        const r = c.getBoundingClientRect();
+        return { x: r.left + r.width / 2, y: r.top + r.height / 2 + scrollY, tx: 0, ty: 0, s: 1 };
+      });
+    };
+    if (fine) {
+      hero.addEventListener('pointermove', e => { heroPtr.x = e.clientX; heroPtr.y = e.clientY; });
+      hero.addEventListener('pointerleave', () => { heroPtr.x = heroPtr.y = -1e4; });
+      addEventListener('resize', () => { charPos = null; setTimeout(measureChars, 200); });
+    }
+    function drawChars() {
+      if (!charPos || scrollY > hero.offsetHeight) return;
+      chars.forEach((c, i) => {
+        const p = charPos[i];
+        const dx = p.x - heroPtr.x, dy = p.y - scrollY - heroPtr.y, d = Math.hypot(dx, dy) || 1;
+        const k = d < 170 ? Math.pow(1 - d / 170, 2) : 0;
+        const tx = dx / d * k * 22, ty = dy / d * k * 30, s = 1 + k * .28;
+        if (Math.abs(tx - p.tx) + Math.abs(ty - p.ty) + Math.abs(s - p.s) < .01) return;
+        p.tx += (tx - p.tx) * .2; p.ty += (ty - p.ty) * .2; p.s += (s - p.s) * .2;
+        c.style.transform = `translate(${p.tx}px, ${p.ty}px) scale(${p.s})`;
+      });
+    }
+
+    /* ===== Main loop ===== */
+
+    let lastY = scrollY, lastT = performance.now();
+    function tick(now) {
+      requestAnimationFrame(tick);
+      if (document.hidden) { lastT = now; return; }
+      const dt = Math.min(100, now - lastT);
+      lastT = now;
+      const vy = (scrollY - lastY) / Math.max(1, dt);
+      lastY = scrollY;
+      const v = Math.min(1, Math.abs(vy) / 5);
+      warp += (v - warp) * (v > warp ? .25 : .05);
+
+      ptr.x += (ptr.tx - ptr.x) * .06;
+      ptr.y += (ptr.ty - ptr.y) * .06;
+      const mix = (from, to) => from.forEach((_, i) => { from[i] += (to[i] - from[i]) * .035; });
+      mix(pal.a, pal.target[0]); mix(pal.b, pal.target[1]); mix(pal.c, pal.target[2]);
+      pal.gain += (pal.target[3] - pal.gain) * .035;
+      shocks.forEach(s => { if (s[2] >= 0) { s[2] += dt / 1000; if (s[2] > 2.2) s[2] = -1; } });
+      if (stage) stage.draw(now / 1000, dt);
+
+      marquees.forEach(m => {
+        const half = m.track.scrollWidth / 2;
+        m.off = (m.off + m.dir * (dt * .05 + Math.abs(vy) * dt * .35)) % half;
+        const x = m.dir > 0 ? -m.off : -half - m.off;
+        m.track.style.transform = `translate3d(${x}px, 0, 0) skewX(${Math.max(-16, Math.min(16, vy * -4))}deg)`;
+      });
+      ghosts.forEach(g => {
+        const r = g.parentElement.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < innerHeight) g.style.transform = `translate3d(0, ${(r.top + r.height / 2 - innerHeight / 2) * -.22}px, 0)`;
+      });
+      if (pin.on) drawPin(dt);
+      drawBeam();
+      drawChars();
+    }
+    requestAnimationFrame(tick);
+
+    /* ===== Intro: particles assemble the name, then blast the page open ===== */
+
+    function playIntro(onOpen) {
+      const cv = document.createElement('canvas');
+      cv.id = 'intro';
+      cv.setAttribute('aria-hidden', 'true');
+      const hud = document.createElement('div');
+      hud.className = 'intro-hud';
+      hud.setAttribute('aria-hidden', 'true');
+      hud.innerHTML = '<div><span>Md. Shahriyar Hasan</span><span>Portfolio 2026</span></div><div><span>Click or press any key to skip</span><b>000</b></div>';
+      document.body.append(cv, hud);
+      const counter = $('b', hud);
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      const W = innerWidth, H = innerHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      const ctx = cv.getContext('2d');
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const off = document.createElement('canvas');
+      const tw = Math.min(W * .86, 1180);
+      let fs = tw / 5.6;
+      off.width = tw; off.height = fs * 1.3;
+      const oc = off.getContext('2d');
+      oc.font = `800 ${fs}px Inter, system-ui, sans-serif`;
+      fs *= Math.min(1, tw / oc.measureText('SHAHRIYAR').width);
+      oc.font = `800 ${fs}px Inter, system-ui, sans-serif`;
+      oc.textAlign = 'center'; oc.textBaseline = 'middle'; oc.fillStyle = '#fff';
+      oc.fillText('SHAHRIYAR', tw / 2, off.height / 2);
+      const data = oc.getImageData(0, 0, off.width, off.height).data;
+      const gap = Math.max(2, Math.round(tw / 340));
+      const ox = (W - tw) / 2, oy = (H - off.height) / 2;
+      const parts = [];
+      const hue = x => x < .5 ? `rgb(${139 - 234 * x | 0},${124 + 170 * x | 0},${255 - 16 * x})` : `rgb(${34 + 420 * (x - .5) | 0},${211 - 180 * (x - .5) | 0},${238 - 120 * (x - .5) | 0})`;
+      for (let y = 0; y < off.height; y += gap) for (let x = 0; x < off.width; x += gap) {
+        if (data[(y * off.width + x) * 4 + 3] < 128) continue;
+        const ang = Math.random() * Math.PI * 2, rad = Math.max(W, H) * (.55 + Math.random() * .4);
+        parts.push({ tx: ox + x, ty: oy + y, ang, rad, d: Math.random() * .4, c: hue(x / off.width), va: Math.atan2(oy + y - H / 2, ox + x - W / 2), vs: 300 + Math.random() * 1400 });
+      }
+
+      const OPEN = 1.65, END = 2.5;
+      let t0 = performance.now(), opened = false, done = false;
+      const open = () => { if (!opened) { opened = true; hud.style.opacity = 0; shock(W / 2, H / 2); onOpen(); setTimeout(measureChars, 1800); } };
+      const finish = () => {
+        if (done) return;
+        done = true;
+        open();
+        cv.remove(); hud.remove();
+        ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => removeEventListener(ev, skip));
+      };
+      const skip = () => { if ((performance.now() - t0) / 1000 < OPEN) t0 = performance.now() - OPEN * 1000; };
+      ['pointerdown', 'keydown', 'wheel', 'touchstart'].forEach(ev => addEventListener(ev, skip, { passive: true }));
+      setTimeout(finish, 4500);
+
+      const maxR = Math.hypot(W, H) / 2 + 60;
+      (function draw(now) {
+        if (done) return;
+        const t = (now - t0) / 1000;
+        if (t >= END) return finish();
+        counter.textContent = String(Math.min(100, Math.round(t / OPEN * 100))).padStart(3, '0');
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.clearRect(0, 0, W, H);
+        ctx.fillStyle = '#05060f';
+        ctx.fillRect(0, 0, W, H);
+        let R = 0;
+        if (t >= OPEN) {
+          open();
+          const e = (t - OPEN) / (END - OPEN);
+          R = maxR * e * e * (3 - 2 * e);
+          ctx.globalCompositeOperation = 'destination-out';
+          ctx.beginPath(); ctx.arc(W / 2, H / 2, R, 0, 7); ctx.fill();
+          ctx.globalCompositeOperation = 'lighter';
+          ctx.strokeStyle = `rgba(190,210,255,${1 - e})`;
+          ctx.lineWidth = 3 + 26 * (1 - e);
+          ctx.beginPath(); ctx.arc(W / 2, H / 2, R, 0, 7); ctx.stroke();
+        }
+        ctx.globalCompositeOperation = 'lighter';
+        const hold = t > 1.05 && t < OPEN;
+        const slice = hold && Math.random() < .22 ? Math.random() * H : -1e4;
+        const size = gap * .8;
+        for (const p of parts) {
+          let x, y;
+          if (t < OPEN) {
+            const k = Math.max(0, Math.min(1, (t - p.d) / (1.05 - p.d)));
+            const e = 1 - Math.pow(1 - k, 4);
+            const a = p.ang + (1 - e) * 2.6, r = p.rad * (1 - e);
+            x = p.tx + Math.cos(a) * r; y = p.ty + Math.sin(a) * r;
+            if (Math.abs(y - slice) < 16) x += 18;
+          } else {
+            const f = t - OPEN, s = p.vs * f * (1 + f);
+            x = p.tx + Math.cos(p.va) * s; y = p.ty + Math.sin(p.va) * s;
+          }
+          ctx.fillStyle = p.c;
+          ctx.globalAlpha = t < OPEN ? 1 : Math.max(0, 1 - (t - OPEN) / (END - OPEN));
+          ctx.fillRect(x, y, size, size);
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      })(t0);
+      document.documentElement.classList.add('intro-live');
+    }
 
     /* ===== Contact card aurora ===== */
 
@@ -1454,6 +1860,13 @@
     cfx.setAttribute('aria-hidden', 'true');
     cfx.innerHTML = '<i></i><i></i>';
     $('.contact-card').prepend(cfx);
+
+    if (document.documentElement.classList.contains('seen') || document.hidden) {
+      document.documentElement.classList.add('intro-live');
+      setTimeout(() => { startHero(); setTimeout(measureChars, 1800); }, 60);
+    } else {
+      playIntro(startHero);
+    }
 
     /* ===== Pointer-driven effects (desktop only) ===== */
 
@@ -1490,6 +1903,52 @@
         });
         el.addEventListener('pointerleave', () => { el.style.transform = ''; });
       });
+
+      // Comet trail and click sparks
+      const trailCv = document.createElement('canvas');
+      trailCv.id = 'trail';
+      trailCv.setAttribute('aria-hidden', 'true');
+      document.body.append(trailCv);
+      const tc = trailCv.getContext('2d');
+      const tdpr = Math.min(devicePixelRatio || 1, 2);
+      const sizeTrail = () => { trailCv.width = innerWidth * tdpr; trailCv.height = innerHeight * tdpr; tc.setTransform(tdpr, 0, 0, tdpr, 0, 0); };
+      sizeTrail();
+      addEventListener('resize', sizeTrail);
+      const comet = [], sparks = [];
+      addEventListener('pointermove', e => { comet.push({ x: e.clientX, y: e.clientY, life: 1 }); if (comet.length > 40) comet.shift(); }, { passive: true });
+      addEventListener('pointerdown', e => {
+        for (let i = 0; i < 26; i++) {
+          const a = Math.random() * Math.PI * 2, s = 2 + Math.random() * 7;
+          sparks.push({ x: e.clientX, y: e.clientY, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, h: 190 + Math.random() * 150 });
+        }
+      }, { passive: true });
+      let trailDirty = false;
+      (function drawTrail() {
+        requestAnimationFrame(drawTrail);
+        if (!comet.length && !sparks.length) {
+          if (trailDirty) { tc.clearRect(0, 0, innerWidth, innerHeight); trailDirty = false; }
+          return;
+        }
+        trailDirty = true;
+        tc.clearRect(0, 0, innerWidth, innerHeight);
+        tc.globalCompositeOperation = 'lighter';
+        tc.lineCap = 'round';
+        for (let i = 1; i < comet.length; i++) {
+          const a = comet[i - 1], b = comet[i], k = i / comet.length;
+          tc.strokeStyle = `hsla(${250 - k * 60}, 95%, 70%, ${b.life * k * .75})`;
+          tc.lineWidth = k * 5;
+          tc.beginPath(); tc.moveTo(a.x, a.y); tc.lineTo(b.x, b.y); tc.stroke();
+        }
+        comet.forEach(p => { p.life -= .05; });
+        while (comet.length && comet[0].life <= 0) comet.shift();
+        for (let i = sparks.length - 1; i >= 0; i--) {
+          const s = sparks[i];
+          s.x += s.vx; s.y += s.vy; s.vx *= .94; s.vy = s.vy * .94 + .08; s.life -= .025;
+          if (s.life <= 0) { sparks.splice(i, 1); continue; }
+          tc.fillStyle = `hsla(${s.h}, 95%, 70%, ${s.life})`;
+          tc.beginPath(); tc.arc(s.x, s.y, 2.2 * s.life + .4, 0, 7); tc.fill();
+        }
+      })();
 
       // Trailing cursor ring
       const ring = document.createElement('div');
