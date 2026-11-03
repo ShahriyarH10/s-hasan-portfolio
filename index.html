@@ -840,6 +840,22 @@
     @keyframes char-wave-dark { 0%, 100% { color: #a5b4fc; } 33% { color: #67e8f9; } 66% { color: #f9a8d4; } }
     [data-theme="dark"].motion .fit-card:hover, [data-theme="dark"].motion .card:hover { box-shadow: 0 30px 60px -20px rgba(79,70,229,.45); }
 
+
+    /* Live HUD: tells visitors the background is interactive */
+    .hud {
+      margin-top: 26px; width: max-content; max-width: 100%; display: flex; align-items: center; gap: 10px; white-space: nowrap;
+      padding: 8px 14px 8px 12px; border-radius: 999px; border: 1px solid var(--line);
+      background: var(--surface); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow);
+      font: 500 .72rem/1 var(--mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase;
+      opacity: 0; translate: 0 12px; pointer-events: none; transition: opacity .5s var(--ease), translate .5s var(--ease);
+    }
+    .hud.show { opacity: 1; translate: 0 0; }
+    .hud .live { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239,68,68,.6); animation: live-pulse-red 1.6s infinite; }
+    .hud b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+    .hud .sep { opacity: .4; }
+    @keyframes live-pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,.55); } 100% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } }
+    @media (max-width: 640px) { .hud .hint-extra { display: none; } }
+
     /* Theme toggle */
     .theme-toggle {
       position: relative; width: 38px; height: 38px; margin-right: -12px; border-radius: 10px; flex: none;
@@ -875,7 +891,7 @@
       :root { color-scheme: light; --bg: #fff; --surface: #fff; --soft: #f6f7fb; --ink: #0f172a; --muted: #475569; --faint: #64748b; --line: #e2e8f0; --accent: #4338ca; --accent-soft: #eef2ff; --ok: #047857; --ok-soft: #ecfdf5; }
       html { background: #fff; }
       .theme-toggle { display: none; }
-      #stage-gl, #trail, #intro, .intro-hud, .ghost, .marquee, .pin-count { display: none !important; }
+      #stage-gl, #trail, #intro, .intro-hud, .hud, .ghost, .marquee, .pin-count { display: none !important; }
       .pin-outer { height: auto !important; }
       .pin-track { transform: none !important; }
       .chars .c { opacity: 1 !important; translate: none !important; scale: none !important; filter: none !important; color: inherit !important; }
@@ -1628,18 +1644,21 @@
     const pal = { a: [...PALETTES.hero[0]], b: [...PALETTES.hero[1]], c: [...PALETTES.hero[2]], gain: PALETTES.hero[3], target: PALETTES.hero };
 
     const palObs = new IntersectionObserver(entries => entries.forEach(e => {
-      if (e.isIntersecting && PALETTES[e.target.id]) pal.target = PALETTES[e.target.id];
+      if (e.isIntersecting && PALETTES[e.target.id] && pal.target !== PALETTES[e.target.id]) {
+        pal.target = PALETTES[e.target.id];
+        shock(innerWidth / 2, innerHeight * .5, .7);
+      }
     }), { rootMargin: '-45% 0px -50% 0px' });
     sections.forEach(s => palObs.observe(s));
 
-    const shocks = [[0, 0, -1], [0, 0, -1], [0, 0, -1], [0, 0, -1]];
+    // Ripples: [x, y, age, strength]. Clicks are strong; the pointer leaves a weak wake.
+    const shocks = Array.from({ length: 8 }, () => [0, 0, -1, 0]);
     let shockIdx = 0;
-    const shock = (x, y) => {
-      shocks[shockIdx] = [(x - innerWidth / 2) / innerHeight, (innerHeight / 2 - y) / innerHeight, 0];
+    const shock = (x, y, k = 1) => {
+      shocks[shockIdx] = [(x - innerWidth / 2) / innerHeight, (innerHeight / 2 - y) / innerHeight, 0, k];
       shockIdx = (shockIdx + 1) % shocks.length;
     };
-    const FAR = 9; // pointer parked off-screen until the user moves it
-    const ptr = { x: FAR, y: FAR, tx: FAR, ty: FAR };
+    const ptr = { x: 0, y: 0, tx: 0, ty: 0, last: -1e9, auto: 0, wx: 0, wy: 0, wt: 0 };
     let warp = 0;
 
     const stage = (() => {
@@ -1650,37 +1669,55 @@
       if (!gl) return null;
       const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
       const fs = `precision highp float;
-        uniform vec2 R,M;uniform float T,V,G,D,P,Y;uniform vec3 A,B,C;uniform vec3 S[4];
+        uniform vec2 R,M;uniform float T,V,G,D,P,Y,L;uniform vec3 A,B,C;uniform vec4 S[8];
         float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
         float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
           return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+        /* a packet of light travelling along one grid line, with a fading tail */
+        float pkt(float line,float pos,float span,float seed){
+          float on=step(.8,h(vec2(line,seed)));
+          float dir=h(vec2(line,seed+1.))>.5?1.:-1.;
+          float spd=.6+h(vec2(line,seed+2.))*1.6;
+          float head=fract(T*spd*.07+h(vec2(line,seed+3.)))*(span+24.)-12.;
+          float dx=(pos-head)*dir;
+          return on*step(dx,0.)*exp(dx*.4)*step(-10.,dx);
+        }
         void main(){
           vec2 fc=gl_FragCoord.xy,uv=(fc-.5*R)/R.y,res=R/P,px=fc/P;
           float u2p=R.y/P,aa=max(.9,1./P);
-          vec2 q=px-(M*u2p+.5*res);float lens=exp(-dot(q,q)/45000.);
+          vec2 q=px-(M*u2p+.5*res);float lens=exp(-dot(q,q)/45000.)*L;
+          float swirl=lens*.9*sin(T*.8);
           vec2 sp=px-q*lens*.38;
+          sp=(M*u2p+.5*res)+mat2(cos(swirl),-sin(swirl),sin(swirl),cos(swirl))*(sp-(M*u2p+.5*res));
           float ring=0.;
-          for(int i=0;i<4;i++){vec3 s=S[i];if(s.z>=0.){vec2 d=sp-(s.xy*u2p+.5*res);float r=length(d);
-            float k=exp(-pow((r-s.z*900.)/42.,2.))*exp(-s.z*1.6);sp+=d/(r+.001)*k*10.;ring+=k;}}
+          for(int i=0;i<8;i++){vec4 s=S[i];if(s.z>=0.){vec2 d=sp-(s.xy*u2p+.5*res);float r=length(d);
+            float k=exp(-pow((r-s.z*900.)/(30.+s.z*40.),2.))*exp(-s.z*1.6)*s.w;sp+=d/(r+.001)*k*12.;ring+=k;}}
           float G0=28.;vec2 gp=sp-vec2(0.,Y);
           vec2 cell=floor(gp/G0),f=(fract(gp/G0)-.5)*G0;
           float ln=smoothstep(aa,0.,min(abs(f.x),abs(f.y)));
           f.y/=1.+V*5.;float d=length(f);
+          /* rolling terrain: dots swell and glow as waves pass through the grid */
+          float wv=.5+.5*sin(cell.x*.22+cell.y*.13-T*1.1+n(cell*.06+T*.08)*5.);
+          wv*=.55+.45*n(cell*.04-vec2(T*.05,0.));
           float act=smoothstep(.62,.9,n(cell*.11+vec2(T*.15,-T*.1))*.6+n(cell*.035-T*.05)*.4);
           float tw=step(.985,h(cell))*(.5+.5*sin(T*2.5+h(cell+7.)*60.));
           float scan=exp(-pow((1.-px.y/res.y-fract(T*.045))*res.y/70.,2.));
-          float lit=clamp(act*.75+lens*1.1+ring*1.2+tw*.8+scan*.3,0.,1.);
-          float rad=1.05+lit*1.5,m=smoothstep(rad+aa,rad-.3,d);
+          float y0=floor(-Y/G0);
+          float pk=max(pkt(cell.y,cell.x,res.x/G0,1.),pkt(cell.x,cell.y-y0,res.y/G0,11.));
+          float lit=clamp(act*.7+lens*1.1+ring*1.2+tw*.8+scan*.3+pk,0.,1.);
+          float rad=.75+wv*.9+lit*1.5,m=smoothstep(rad+aa,rad-.3,d);
           vec3 col=mix(vec3(.972,.977,1.),vec3(.02,.024,.058),D);
           float tt=T*.06;
           vec2 a1=uv-vec2(.62+.1*sin(tt*3.),.48+.05*cos(tt*2.3)),a2=uv-vec2(-.7+.08*cos(tt*2.6),-.15+.1*sin(tt*1.9));
           col=mix(col,A,exp(-dot(a1,a1)*2.4)*G*mix(.22,.42,D));
           col=mix(col,B,exp(-dot(a2,a2)*2.8)*G*mix(.12,.2,D));
-          vec3 Cd=mix(C,vec3(1.),.3*D),ink=mix(vec3(.08,.1,.2),vec3(.78,.82,1.),D);
+          vec3 Cd=mix(C,vec3(1.),.3*D),Bd=mix(B,vec3(1.),.35*D),ink=mix(vec3(.08,.1,.2),vec3(.78,.82,1.),D);
           col=mix(col,C,lens*mix(.05,.12,D));
           col=mix(col,Cd,ln*lens*.2);
-          col=mix(col,mix(ink,Cd,lit),m*clamp(mix(.2,.17,D)+lit*.8,0.,1.));
-          col+=Cd*lit*exp(-d*d/40.)*.2*D;
+          col=mix(col,Cd,ln*ring*.25);
+          vec3 dc=mix(mix(ink,Cd,lit),Bd,pk*.85);
+          col=mix(col,dc,m*clamp(mix(.13,.12,D)+wv*mix(.12,.1,D)+lit*.8,0.,1.));
+          col+=mix(Cd,Bd,pk)*lit*exp(-d*d/45.)*.22*D;
           col=mix(col,C,V*.05);
           col*=1.-D*.25*dot(uv,uv);
           col+=(h(fc+fract(T))-.5)*.01;
@@ -1701,7 +1738,7 @@
       gl.useProgram(prog);
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
       const U = {};
-      ['R', 'M', 'T', 'V', 'G', 'D', 'P', 'Y', 'A', 'B', 'C', 'S'].forEach(n => { U[n] = gl.getUniformLocation(prog, n); });
+      ['R', 'M', 'T', 'V', 'G', 'D', 'P', 'Y', 'L', 'A', 'B', 'C', 'S'].forEach(n => { U[n] = gl.getUniformLocation(prog, n); });
       // Dots need crisp pixels, so render near device resolution; the shader is cheap.
       const dpr = devicePixelRatio || 1;
       let scale = Math.min(dpr, fine ? 1.5 : 1);
@@ -1730,26 +1767,58 @@
           gl.uniform1f(U.D, theme.d);
           gl.uniform1f(U.P, cv.width / innerWidth);
           gl.uniform1f(U.Y, scrollY * .35);
+          gl.uniform1f(U.L, 1 - ptr.auto * .35);
           gl.uniform3fv(U.A, pal.a);
           gl.uniform3fv(U.B, pal.b);
           gl.uniform3fv(U.C, pal.c);
-          gl.uniform3fv(U.S, shocks.flat());
+          gl.uniform4fv(U.S, shocks.flat());
           gl.drawArrays(gl.TRIANGLES, 0, 3);
         }
       };
     })();
     if (stage) theme.redraw = () => stage.draw(performance.now() / 1000, 16);
 
-    const park = () => { ptr.x = ptr.y = ptr.tx = ptr.ty = FAR; };
+    // With no pointer activity, an autopilot lens drifts around so the field never sits still.
+    const park = () => { ptr.last = -1e9; };
     addEventListener('pointermove', e => {
+      const now = performance.now();
       ptr.tx = (e.clientX - innerWidth / 2) / innerHeight;
       ptr.ty = (innerHeight / 2 - e.clientY) / innerHeight;
-      if (Math.abs(ptr.x) >= FAR) { ptr.x = ptr.tx; ptr.y = ptr.ty; }
+      if (now - ptr.last > 600 && ptr.auto < .5) { ptr.x = ptr.tx; ptr.y = ptr.ty; }
+      ptr.last = now;
+      // Fast pointer movement leaves a trail of soft ripples
+      const dist = Math.hypot(e.clientX - ptr.wx, e.clientY - ptr.wy);
+      if (dist > 140 && now - ptr.wt > 110) {
+        shock(e.clientX, e.clientY, Math.min(.45, dist / 600));
+        ptr.wx = e.clientX; ptr.wy = e.clientY; ptr.wt = now;
+      }
     }, { passive: true });
     addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') park(); }, { passive: true });
     addEventListener('pointercancel', park, { passive: true });
     document.documentElement.addEventListener('mouseleave', park);
     addEventListener('pointerdown', e => shock(e.clientX, e.clientY), { passive: true });
+
+
+    /* ===== Live HUD ===== */
+
+    const hud = document.createElement('div');
+    hud.className = 'hud';
+    hud.setAttribute('aria-hidden', 'true');
+    hud.innerHTML = '<span class="live"></span><span>Live</span><span class="sep">/</span><b class="fps">60</b><span>fps</span>'
+      + '<span class="hint-extra"><span class="sep">/</span> <b class="nodes">0</b> nodes</span>'
+      + '<span class="sep">/</span><span>' + (fine ? 'move · click · scroll' : 'tap · scroll') + '</span>';
+    $('.hero-links').after(hud);
+    const hudFps = $('.fps', hud), hudNodes = $('.nodes', hud);
+    const setNodes = () => { hudNodes.textContent = (Math.ceil(innerWidth / 28) * Math.ceil(innerHeight / 28)).toLocaleString(); };
+    setNodes();
+    addEventListener('resize', setNodes);
+    let frames = 0, fpsT = performance.now();
+    (function countFps(now) {
+      frames++;
+      if (now - fpsT > 500) { hudFps.textContent = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
+      requestAnimationFrame(countFps);
+    })(fpsT);
+    if (stage) setTimeout(() => hud.classList.add('show'), 900);
 
     /* ===== Kinetic marquees and ghost numbers ===== */
 
@@ -1881,13 +1950,21 @@
       const v = Math.min(1, Math.abs(vy) / 5);
       warp += (v - warp) * (v > warp ? .25 : .05);
 
-      ptr.x += (ptr.tx - ptr.x) * .1;
-      ptr.y += (ptr.ty - ptr.y) * .1;
+      const idle = now - ptr.last > 3500;
+      ptr.auto += ((idle ? 1 : 0) - ptr.auto) * .02;
+      if (idle) {
+        const at = now / 1000, asp = innerWidth / innerHeight;
+        ptr.tx = asp * .34 * Math.sin(at * .31) + .08 * Math.sin(at * 1.3);
+        ptr.ty = .26 * Math.sin(at * .47 + 1) + .05 * Math.cos(at * 1.7);
+      }
+      const follow = idle ? .025 : .1;
+      ptr.x += (ptr.tx - ptr.x) * follow;
+      ptr.y += (ptr.ty - ptr.y) * follow;
       theme.d += ((theme.dark ? 1 : 0) - theme.d) * .08;
       const mix = (from, to) => from.forEach((_, i) => { from[i] += (to[i] - from[i]) * .035; });
       mix(pal.a, pal.target[0]); mix(pal.b, pal.target[1]); mix(pal.c, pal.target[2]);
       pal.gain += (pal.target[3] - pal.gain) * .035;
-      shocks.forEach(s => { if (s[2] >= 0) { s[2] += dt / 1000; if (s[2] > 2.2) s[2] = -1; } });
+      shocks.forEach(s => { if (s[2] >= 0) { s[2] += dt / 1000; if (s[2] > 2.4) s[2] = -1; } });
       if (stage) stage.draw(now / 1000, dt);
 
       marquees.forEach(m => {
