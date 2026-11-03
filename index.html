@@ -856,6 +856,62 @@
     @keyframes live-pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,.55); } 100% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } }
     @media (max-width: 640px) { .hud .hint-extra { display: none; } }
 
+
+    /* ===== Realism layer: glass, light-driven shadows, depth ===== */
+
+    :root {
+      --glass: rgba(255,255,255,.6); --glass-edge: rgba(255,255,255,.75); --sheen: rgba(255,255,255,.55);
+      --shade-near: rgba(30,27,75,.10); --shade-far: rgba(30,27,75,.16);
+      --lsx: 0px; --lsy: 14px; --lhx: 30%; --lhy: -20%;
+    }
+    [data-theme="dark"] {
+      --glass: rgba(14,17,38,.5); --glass-edge: rgba(255,255,255,.1); --sheen: rgba(165,180,252,.14);
+      --shade-near: rgba(0,0,0,.45); --shade-far: rgba(0,0,0,.6);
+    }
+    /* Cast shadow falls away from the light (the pointer); sheen sits where the light hits */
+    .glass, .lit {
+      box-shadow:
+        inset 0 1px 0 var(--glass-edge),
+        calc(var(--lsx) * .25) calc(var(--lsy) * .25) 6px -2px var(--shade-near),
+        var(--lsx) var(--lsy) 44px -10px var(--shade-far);
+    }
+    .glass {
+      background: radial-gradient(520px circle at var(--lhx) var(--lhy), var(--sheen), transparent 55%), var(--glass);
+      border-color: var(--line);
+    }
+    .glass.achievement { background: radial-gradient(520px circle at var(--lhx) var(--lhy), var(--sheen), transparent 55%), var(--accent-soft); }
+    @media (pointer: fine) {
+      .glass { backdrop-filter: blur(16px) saturate(170%); -webkit-backdrop-filter: blur(16px) saturate(170%); }
+    }
+    @media (pointer: coarse) {
+      :root { --glass: rgba(255,255,255,.82); }
+      [data-theme="dark"] { --glass: rgba(14,17,38,.82); }
+    }
+
+    /* Hero as a layered 3D composition: each layer sits at its own depth */
+    #hero > .container { transform-style: preserve-3d; }
+    .motion .hero-grid { transform-style: preserve-3d; }
+    @media (pointer: fine) and (min-width: 1001px) {
+      .motion .hero-grid > div:first-child { transform-style: preserve-3d; }
+      .motion .hero-grid > div:first-child > .pill { transform: translateZ(50px); }
+      .motion .hero-grid > div:first-child > .hero-roles { transform: translateZ(35px); }
+      .motion .hero-grid > div:first-child > .hero-title { transform: translateZ(70px); }
+      .motion .hero-grid > div:first-child > .hero-lede { transform: translateZ(20px); }
+      .motion .hero-grid > div:first-child > .hero-actions { transform: translateZ(55px); }
+      .motion .hero-grid > div:first-child > .hero-links { transform: translateZ(30px); }
+      .motion .hero-grid > div:first-child > .hud { transform: translateZ(45px); }
+      .motion #hero .glance { --pz: 90px; }
+    }
+
+    /* Proof: four floating tiles instead of one strip */
+    .proof { background: none; border: 0; box-shadow: none; gap: 16px; overflow: visible; }
+    .proof > .proof-item { border: 1px solid var(--line); border-radius: var(--radius); position: relative; overflow: hidden; }
+    .motion .proof::before { display: none; }
+    .proof > .proof-item::before {
+      content: ''; position: absolute; left: 16px; right: 16px; top: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: .6;
+    }
+
     /* Theme toggle */
     .theme-toggle {
       position: relative; width: 38px; height: 38px; margin-right: -12px; border-radius: 10px; flex: none;
@@ -1389,6 +1445,11 @@
     if (themeStored === null) applyTheme(e.matches);
   });
 
+  /* ===== Materials: frosted glass panels lit by the pointer ===== */
+
+  $$('.glance, .proof-item, .fit-card, .card, .notebooks, .skill-block, .exp-card, .panel').forEach(el => el.classList.add('glass'));
+  $('.contact-card').classList.add('lit');
+
   /* ===== Scroll progress, sticky shadow, back-to-top ===== */
 
   const bar = document.createElement('div');
@@ -1421,7 +1482,6 @@
     toTop.classList.toggle('show', y > 600);
     if (motion && y < hero.offsetHeight) {
       const hp = y / hero.offsetHeight;
-      heroGrid.style.transform = `translate3d(0, ${y * 0.22}px, ${hp * -220}px) rotateX(${hp * 16}deg)`;
       heroGrid.style.opacity = Math.max(0, 1 - hp * 1.25);
     }
   }
@@ -1702,12 +1762,12 @@
       const ptVS = `precision highp float;
         attribute vec4 a;
         uniform vec2 R,M,Q;uniform float T,V,D,Y,L,PT,F,SR,SA,G;uniform vec3 A,B,C;uniform vec4 S[8];
-        varying vec3 vc;varying float va;
+        varying vec3 vc;varying float va,vb;
         vec2 proj(vec3 v){vec2 s=v.xy/(-v.z)*F*.5;float r=-M.x*.05;return mat2(cos(r),sin(r),-sin(r),cos(r))*s;}
         vec3 view(vec3 w,vec3 cam){vec3 v=w-cam;float c=cos(PT),s=sin(PT);return vec3(v.x,v.y*c-v.z*s,v.y*s+v.z*c);}
         float waves(vec2 w){return .6*sin(w.x*.3+T*.6)*cos(w.y*.24-T*.45)+.38*sin(w.x*.62-w.y*.41+T*1.05)+.2*sin(w.y*.85+w.x*.18+T*1.6);}
         void main(){
-          float aspect=R.x/R.y,ink=0.,lit=0.,sz,alpha;vec3 v,base;vec2 s;
+          float aspect=R.x/R.y,ink=0.,lit=0.,sz,alpha,blur=0.;vec3 v,base;vec2 s;
           vec3 ink3=mix(vec3(.1,.12,.25),vec3(.7,.75,1.),D);
           if(a.w<.5){
             float span=64.,depth=mod(a.y*span-Y,span)+.6;
@@ -1725,8 +1785,9 @@
             float crest=smoothstep(.35,1.15,hgt);
             lit=clamp(bump*1.1+ring*1.4+crest*.55,0.,1.);
             float fog=smoothstep(span,span*.3,depth)*smoothstep(.8,3.5,depth);
-            sz=.032/(-v.z)*F*.5*R.y*(1.+lit*.9);
-            alpha=fog*(mix(.26,.42,D)+lit*.65);
+            blur=smoothstep(6.,1.5,depth)*.95+smoothstep(22.,60.,depth)*.35;
+            sz=.032/(-v.z)*F*.5*R.y*(1.+lit*.9)*(1.+blur*1.4);
+            alpha=fog*(mix(.26,.42,D)+lit*.65)*(1.-blur*.55);
             base=mix(mix(A,C,crest),B,ring*.8);
           }else{
             vec3 p=a.xyz*(1.+.045*sin(T*1.6+a.y*7.+a.x*3.));
@@ -1740,20 +1801,23 @@
             vec2 dm=s-M;float bump=exp(-dot(dm,dm)*45.)*L;
             v+=p*rw*bump*.22;s=proj(v);
             float front=smoothstep(-1.,1.,p.z);
-            lit=clamp(bump*1.3+smoothstep(.75,1.,p.z)*.35,0.,1.);
-            sz=.05/(-v.z)*F*.5*R.y*(.6+front*.6+lit*.8);
-            alpha=SA*(.12+front*.6+lit*.5)*mix(.75,1.,D);
-            base=mix(A,mix(C,B,.5+.5*p.y),front);
+            vec3 Ld=normalize(vec3((M-Q)*2.2,1.1));
+            float dif=max(dot(p,Ld),0.),spec=pow(max(dot(reflect(-Ld,p),vec3(0.,0.,1.)),0.),18.);
+            lit=clamp(bump*1.3+spec*.9,0.,1.);
+            blur=(1.-front)*.6;
+            sz=.05/(-v.z)*F*.5*R.y*(.55+front*.45+dif*.35+lit*.8)*(1.+blur*.8);
+            alpha=SA*(.08+front*.3+dif*.55+lit*.5)*mix(.75,1.,D)*(1.-blur*.4);
+            base=mix(A*.7,mix(C,B,.5+.5*p.y),.35+dif*.65);
           }
           vc=mix(mix(ink3,base,.55+lit*.45),vec3(1.),lit*.35*D);
-          va=clamp(alpha,0.,1.);
+          va=clamp(alpha,0.,1.);vb=blur;
           gl_PointSize=clamp(sz,1.,48.);
           gl_Position=v.z<-.3?vec4(s.x*2./aspect,s.y*2.,0.,1.):vec4(0.,0.,2.,1.);
         }`;
       const ptFS = `precision highp float;
-        varying vec3 vc;varying float va;uniform float D;
+        varying vec3 vc;varying float va,vb;uniform float D;
         void main(){float r=length(gl_PointCoord-.5);
-          float a=(smoothstep(.5,.28,r)+smoothstep(.5,0.,r)*.4*D)*va;
+          float a=(smoothstep(.5,mix(.28,0.,vb),r)*(1.+vb*.25)+smoothstep(.5,0.,r)*.4*D*(1.-vb))*va;
           gl_FragColor=vec4(vc*a,a);}`;
 
       const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
@@ -2021,6 +2085,37 @@
       });
     }
 
+    /* ===== Light: the pointer is a lamp. Panels cast shadows away from it and catch a sheen. ===== */
+
+    const litEls = $$('.glass, .lit');
+    const litOn = new Set();
+    const litObs = new IntersectionObserver(es => es.forEach(e => e.isIntersecting ? litOn.add(e.target) : litOn.delete(e.target)));
+    litEls.forEach(el => litObs.observe(el));
+    function drawLight() {
+      const LX = ptr.x * innerHeight + innerWidth / 2, LY = innerHeight / 2 - ptr.y * innerHeight;
+      const els = [...litOn], rects = els.map(el => el.getBoundingClientRect());
+      els.forEach((el, i) => {
+        const r = rects[i];
+        const dx = r.left + r.width / 2 - LX, dy = r.top + r.height / 2 - LY, d = Math.hypot(dx, dy) || 1;
+        const m = Math.min(26, 6 + d / 45);
+        el.style.setProperty('--lsx', (dx / d * m).toFixed(1) + 'px');
+        el.style.setProperty('--lsy', (dy / d * m + 8).toFixed(1) + 'px');
+        el.style.setProperty('--lhx', ((LX - r.left) / r.width * 100).toFixed(1) + '%');
+        el.style.setProperty('--lhy', ((LY - r.top) / r.height * 100).toFixed(1) + '%');
+      });
+    }
+
+    /* Hero composition turns toward the pointer; layers at different depths give real parallax */
+    const hm = { x: 0, y: 0 };
+    function drawHero() {
+      const y = scrollY, H = hero.offsetHeight;
+      if (y >= H) return;
+      const hp = y / H, k = 1 - ptr.auto;
+      hm.x += (ptr.x * k - hm.x) * .08;
+      hm.y += (ptr.y * k - hm.y) * .08;
+      heroGrid.style.transform = `translate3d(0, ${y * .22}px, ${hp * -220}px) rotateX(${(hp * 16 - hm.y * 5).toFixed(2)}deg) rotateY(${(hm.x * 5).toFixed(2)}deg)`;
+    }
+
     /* ===== Main loop ===== */
 
     let lastY = scrollY, lastT = performance.now();
@@ -2064,6 +2159,8 @@
       if (pin.on) drawPin(dt);
       drawBeam();
       drawChars();
+      drawHero();
+      drawLight();
     }
     requestAnimationFrame(tick);
 
