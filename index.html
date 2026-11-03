@@ -841,20 +841,6 @@
     [data-theme="dark"].motion .fit-card:hover, [data-theme="dark"].motion .card:hover { box-shadow: 0 30px 60px -20px rgba(79,70,229,.45); }
 
 
-    /* Live HUD: tells visitors the background is interactive */
-    .hud {
-      margin-top: 26px; width: max-content; max-width: 100%; display: flex; align-items: center; gap: 10px; white-space: nowrap;
-      padding: 8px 14px 8px 12px; border-radius: 999px; border: 1px solid var(--line);
-      background: var(--surface); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: var(--shadow);
-      font: 500 .72rem/1 var(--mono); letter-spacing: .06em; color: var(--muted); text-transform: uppercase;
-      opacity: 0; translate: 0 12px; pointer-events: none; transition: opacity .5s var(--ease), translate .5s var(--ease);
-    }
-    .hud.show { opacity: 1; translate: 0 0; }
-    .hud .live { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; box-shadow: 0 0 0 0 rgba(239,68,68,.6); animation: live-pulse-red 1.6s infinite; }
-    .hud b { color: var(--ink); font-weight: 600; font-variant-numeric: tabular-nums; }
-    .hud .sep { opacity: .4; }
-    @keyframes live-pulse-red { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,.55); } 100% { box-shadow: 0 0 0 8px rgba(239,68,68,0); } }
-    @media (max-width: 640px) { .hud .hint-extra { display: none; } }
 
 
     /* ===== Realism layer: glass, light-driven shadows, depth ===== */
@@ -899,7 +885,6 @@
       .motion .hero-grid > div:first-child > .hero-lede { transform: translateZ(20px); }
       .motion .hero-grid > div:first-child > .hero-actions { transform: translateZ(55px); }
       .motion .hero-grid > div:first-child > .hero-links { transform: translateZ(30px); }
-      .motion .hero-grid > div:first-child > .hud { transform: translateZ(45px); }
       .motion #hero .glance { --pz: 90px; }
     }
 
@@ -947,7 +932,7 @@
       :root { color-scheme: light; --bg: #fff; --surface: #fff; --soft: #f6f7fb; --ink: #0f172a; --muted: #475569; --faint: #64748b; --line: #e2e8f0; --accent: #4338ca; --accent-soft: #eef2ff; --ok: #047857; --ok-soft: #ecfdf5; }
       html { background: #fff; }
       .theme-toggle { display: none; }
-      #stage-gl, #trail, #intro, .intro-hud, .hud, .ghost, .marquee, .pin-count { display: none !important; }
+      #stage-gl, #trail, #intro, .intro-hud, .ghost, .marquee, .pin-count { display: none !important; }
       .pin-outer { height: auto !important; }
       .pin-track { transform: none !important; }
       .chars .c { opacity: 1 !important; translate: none !important; scale: none !important; filter: none !important; color: inherit !important; }
@@ -1946,25 +1931,6 @@
     document.documentElement.addEventListener('mouseleave', park);
     addEventListener('pointerdown', e => shock(e.clientX, e.clientY), { passive: true });
 
-
-    /* ===== Live HUD ===== */
-
-    const hud = document.createElement('div');
-    hud.className = 'hud';
-    hud.setAttribute('aria-hidden', 'true');
-    hud.innerHTML = '<span> </span>';
-    $('.hero-links').after(hud);
-    const hudFps = $('.fps', hud), hudNodes = $('.nodes', hud);
-    const setNodes = () => { hudNodes.textContent = (stage ? stage.count : 0).toLocaleString(); };
-    setNodes();
-    addEventListener('resize', setNodes);
-    let frames = 0, fpsT = performance.now();
-    (function countFps(now) {
-      frames++;
-      if (now - fpsT > 500) { hudFps.textContent = Math.round(frames * 1000 / (now - fpsT)); frames = 0; fpsT = now; }
-      requestAnimationFrame(countFps);
-    })(fpsT);
-    if (stage) setTimeout(() => hud.classList.add('show'), 900);
 
     /* ===== Kinetic marquees and ghost numbers ===== */
 
