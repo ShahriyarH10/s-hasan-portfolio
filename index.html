@@ -7,7 +7,7 @@
   <meta name="keywords" content="Shahriyar Hasan, AIUB, Portfolio, Software Engineer, AI Engineer, Data Scientist, Full-Stack Developer, JavaScript, Python, Supabase, Machine Learning">
   <meta name="author" content="Md. Shahriyar Hasan">
   <meta name="theme-color" content="#f8f9ff">
-  <meta name="color-scheme" content="light">
+  <meta name="color-scheme" content="light dark">
   <link rel="canonical" href="https://shahriyarh10.github.io/s-hasan-portfolio/">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://shahriyarh10.github.io/s-hasan-portfolio/">
@@ -42,6 +42,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
+  <script>
+    // Apply the saved (or system) theme before first paint to avoid a flash.
+    (function () {
+      var d = document.documentElement, t = null;
+      try { t = localStorage.getItem('theme'); } catch (e) {}
+      if (t !== 'dark' && t !== 'light') t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      d.setAttribute('data-theme', t);
+      var m = document.querySelector('meta[name="theme-color"]');
+      if (m) m.content = t === 'dark' ? '#05060f' : '#f8f9ff';
+    })();
+  </script>
   <script>
     // Enable motion before first paint; fall back to static if the main script never runs.
     (function () {
@@ -639,7 +650,15 @@
 
     /* ===== Action layer ===== */
 
-    html { background: radial-gradient(1000px 600px at 80% 0%, #e0e7ff, transparent 70%), radial-gradient(800px 600px at 0% 60%, #fce7f3, transparent 70%), var(--bg); background-attachment: fixed; }
+    /* Static fallback when WebGL is unavailable: dot grid + soft glow */
+    html {
+      background:
+        radial-gradient(900px 520px at 85% -5%, var(--glow-a), transparent 70%),
+        radial-gradient(800px 520px at -5% 60%, var(--glow-b), transparent 70%),
+        radial-gradient(var(--grid-dot) 1px, transparent 1.4px) 0 0 / 28px 28px,
+        var(--bg);
+      background-attachment: fixed;
+    }
     html, body { overflow-x: clip; }
     body { background: transparent; }
     section { position: relative; isolation: isolate; }
@@ -661,7 +680,7 @@
     #hero { min-height: calc(100svh - 65px); display: flex; align-items: center; background: none; perspective: 1400px; }
     #hero > .container { width: 100%; }
     .hero-grid { transform-origin: 50% 0; }
-    .hero-lede, .hero-roles, .section-lede { text-shadow: 0 0 14px rgba(255,255,255,.95), 0 0 3px rgba(255,255,255,.8); }
+    .hero-lede, .hero-roles, .section-lede { text-shadow: 0 0 14px var(--halo), 0 0 3px var(--halo); }
     h1.hero-title { font-size: clamp(2.6rem, 5.2vw, 4.5rem); line-height: 1.04; }
     .chars .w { display: inline-block; white-space: nowrap; }
     .chars .c { display: inline-block; will-change: transform; }
@@ -777,6 +796,73 @@
       .skills-grid { grid-template-columns: 1fr; }
     }
 
+
+    /* ===== Themes ===== */
+
+    :root { color-scheme: light; --glow-a: rgba(99,102,241,.16); --glow-b: rgba(219,39,119,.08); --grid-dot: rgba(15,23,42,.13); --halo: rgba(248,249,255,.95); }
+    [data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #05060f;
+      --surface: rgba(14,17,34,.78);
+      --soft: rgba(255,255,255,.035);
+      --ink: #e8ebf7;
+      --muted: #a4acc6;
+      --faint: #8c94b0;
+      --line: rgba(255,255,255,.09);
+      --accent: #a5b4fc;
+      --accent-solid: #4f46e5;
+      --accent-hover: #6366f1;
+      --accent-soft: rgba(99,102,241,.15);
+      --ok: #34d399;
+      --ok-soft: rgba(16,185,129,.13);
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 14px 36px rgba(0,0,0,.5);
+      --glow-a: rgba(79,70,229,.32); --glow-b: rgba(219,39,119,.14); --grid-dot: rgba(255,255,255,.1); --halo: rgba(5,6,15,.9);
+    }
+    [data-theme="dark"] .topbar { background: rgba(5,6,15,.55); }
+    [data-theme="dark"] .topbar.scrolled { background: rgba(5,6,15,.82); box-shadow: 0 8px 28px rgba(0,0,0,.45); }
+    [data-theme="dark"] section.alt { background: rgba(255,255,255,.015); }
+    [data-theme="dark"] .card:hover, [data-theme="dark"] .spot:hover { border-color: rgba(165,180,252,.28); }
+    [data-theme="dark"] .thumb-icon .ico { background: #10132a; border-color: var(--line); box-shadow: 0 8px 22px rgba(0,0,0,.45); }
+    [data-theme="dark"] .achievement { border-color: rgba(129,140,248,.22); }
+    [data-theme="dark"] .tag:hover, [data-theme="dark"] .pill-skill:hover { border-color: rgba(165,180,252,.4); }
+    [data-theme="dark"] .pill-skill:hover { background: #10132a; box-shadow: 0 8px 22px -6px rgba(99,102,241,.45); }
+    [data-theme="dark"] .contact-card { background: #0b0e22; border: 1px solid var(--line); }
+    [data-theme="dark"] .hero-lede, [data-theme="dark"] .hero-roles, [data-theme="dark"] .section-lede { text-shadow: 0 0 16px rgba(5,6,15,.95), 0 0 3px rgba(5,6,15,.8); }
+    [data-theme="dark"] .ghost { -webkit-text-stroke-color: rgba(165,180,252,.13); }
+    [data-theme="dark"] .marquee { background: rgba(5,6,15,.55); }
+    [data-theme="dark"] .marquee span { -webkit-text-stroke-color: rgba(232,235,247,.28); }
+    [data-theme="dark"] .marquee span:nth-child(3n+1) { -webkit-text-stroke: 0; }
+    [data-theme="dark"] .cursor { border-color: rgba(165,180,252,.55); }
+    [data-theme="dark"] .cursor.hot { background: rgba(129,140,248,.12); border-color: rgba(165,180,252,.25); }
+    [data-theme="dark"] .intro-hud { color: #8c94b0; }
+    [data-theme="dark"] .intro-hud b { color: #e8ebf7; }
+    [data-theme="dark"].motion .hero-title em .c { animation-name: char-wave-dark; }
+    @keyframes char-wave-dark { 0%, 100% { color: #a5b4fc; } 33% { color: #67e8f9; } 66% { color: #f9a8d4; } }
+    [data-theme="dark"].motion .fit-card:hover, [data-theme="dark"].motion .card:hover { box-shadow: 0 30px 60px -20px rgba(79,70,229,.45); }
+
+    /* Theme toggle */
+    .theme-toggle {
+      position: relative; width: 38px; height: 38px; margin-right: -12px; border-radius: 10px; flex: none;
+      display: grid; place-items: center; cursor: pointer; color: var(--ink);
+      background: var(--surface); border: 1px solid var(--line);
+      transition: border-color .25s, background-color .25s, transform .35s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .theme-toggle:hover { border-color: var(--accent); transform: rotate(-12deg) scale(1.06); }
+    .theme-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+    .theme-toggle svg {
+      grid-area: 1 / 1; width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round;
+      transition: opacity .35s, transform .55s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .theme-toggle .moon { opacity: 0; transform: rotate(-90deg) scale(.4); }
+    [data-theme="dark"] .theme-toggle .sun { opacity: 0; transform: rotate(90deg) scale(.4); }
+    [data-theme="dark"] .theme-toggle .moon { opacity: 1; transform: none; fill: currentColor; fill-opacity: .15; }
+    ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+    ::view-transition-new(root) { z-index: 9999; }
+    @media (max-width: 760px) {
+      .theme-toggle { margin: 0 0 0 auto; }
+      .topbar .btn { margin-left: 0; }
+    }
+
     @media (max-width: 640px) {
       .projects-grid, .fit-grid { grid-template-columns: 1fr; }
       .proof-item { padding: 18px 20px; }
@@ -788,6 +874,7 @@
     @media print {
       :root { color-scheme: light; --bg: #fff; --surface: #fff; --soft: #f6f7fb; --ink: #0f172a; --muted: #475569; --faint: #64748b; --line: #e2e8f0; --accent: #4338ca; --accent-soft: #eef2ff; --ok: #047857; --ok-soft: #ecfdf5; }
       html { background: #fff; }
+      .theme-toggle { display: none; }
       #stage-gl, #trail, #intro, .intro-hud, .ghost, .marquee, .pin-count { display: none !important; }
       .pin-outer { height: auto !important; }
       .pin-track { transform: none !important; }
@@ -824,6 +911,10 @@
       <a href="#education">Education</a>
       <a href="#contact">Contact</a>
     </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch to dark theme" title="Toggle theme">
+      <svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M4.6 4.6l1.6 1.6M17.8 17.8l1.6 1.6M2.5 12h2.2M19.3 12h2.2M4.6 19.4l1.6-1.6M17.8 6.2l1.6-1.6"/></svg>
+      <svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.2A8.5 8.5 0 0 1 9.8 3.5a8.5 8.5 0 1 0 10.7 10.7z"/></svg>
+    </button>
     <a class="btn btn-primary btn-sm" href="resume/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
   </div>
 </header>
@@ -1239,6 +1330,49 @@
 
   sections.forEach(s => observer.observe(s));
 
+  /* ===== Theme: light / dark with a circular reveal ===== */
+
+  const root = document.documentElement;
+  const themeBtn = $('.theme-toggle');
+  const themeMeta = $('meta[name="theme-color"]');
+  const theme = { dark: root.getAttribute('data-theme') === 'dark', d: 0, redraw: null };
+  theme.d = theme.dark ? 1 : 0;
+  let themeStored = null;
+  try { themeStored = localStorage.getItem('theme'); } catch (e) {}
+
+  function applyTheme(dark) {
+    theme.dark = dark;
+    root.setAttribute('data-theme', dark ? 'dark' : 'light');
+    themeBtn.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    themeBtn.setAttribute('aria-pressed', String(dark));
+    if (themeMeta) themeMeta.content = dark ? '#05060f' : '#f8f9ff';
+  }
+  applyTheme(theme.dark);
+
+  themeBtn.addEventListener('click', e => {
+    const next = !theme.dark;
+    try { localStorage.setItem('theme', next ? 'dark' : 'light'); themeStored = next; } catch (err) {}
+    const swap = () => {
+      applyTheme(next);
+      theme.d = next ? 1 : 0;
+      if (theme.redraw) theme.redraw();
+    };
+    if (!motion || !document.startViewTransition) { swap(); return; }
+    const r = themeBtn.getBoundingClientRect();
+    const x = e.clientX || r.left + r.width / 2, y = e.clientY || r.top + r.height / 2;
+    const rad = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+    document.startViewTransition(swap).ready.then(() => {
+      root.animate(
+        { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${rad}px at ${x}px ${y}px)`] },
+        { duration: 750, easing: 'cubic-bezier(.22, 1, .36, 1)', pseudoElement: '::view-transition-new(root)' }
+      );
+    }).catch(() => {});
+  });
+
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+    if (themeStored === null) applyTheme(e.matches);
+  });
+
   /* ===== Scroll progress, sticky shadow, back-to-top ===== */
 
   const bar = document.createElement('div');
@@ -1478,16 +1612,18 @@
       }, 1400);
     };
 
-    /* ===== Stage: fullscreen WebGL field behind the whole page ===== */
+    /* ===== Stage: interactive dot-matrix field behind the whole page =====
+       Lens under the pointer, shockwaves on click, warp streaks on fast scroll,
+       drifting activity clusters and a scan line. Colors follow the section in view. */
 
     const PALETTES = {
-      hero: [[.78, .82, 1], [.93, .72, .98], [.25, .55, .98], fine ? .85 : .6],
-      fit: [[.86, .80, 1], [.98, .74, .88], [.49, .23, .93], .55],
-      projects: [[.75, .90, 1], [.72, .82, 1], [.05, .55, .85], .6],
-      skills: [[.75, .96, .88], [.82, .95, .68], [.02, .60, .50], .55],
-      experience: [[1, .88, .72], [1, .78, .78], [.93, .35, .25], .5],
-      education: [[.78, .85, 1], [.74, .93, 1], [.25, .35, .90], .5],
-      contact: [[.93, .78, 1], [1, .74, .86], [.86, .15, .55], .7]
+      hero:       [[.31, .27, .90], [.86, .16, .47], [.31, .36, .95], 1],
+      fit:        [[.49, .23, .93], [.31, .27, .90], [.55, .36, .96], .85],
+      projects:   [[.03, .57, .70], [.31, .27, .90], [.02, .58, .80], .9],
+      skills:     [[.02, .60, .50], [.03, .57, .70], [.04, .62, .50], .8],
+      experience: [[.96, .45, .15], [.86, .16, .47], [.92, .40, .18], .8],
+      education:  [[.25, .35, .90], [.03, .57, .70], [.30, .40, .95], .8],
+      contact:    [[.86, .16, .47], [.49, .23, .93], [.86, .20, .55], 1]
     };
     const pal = { a: [...PALETTES.hero[0]], b: [...PALETTES.hero[1]], c: [...PALETTES.hero[2]], gain: PALETTES.hero[3], target: PALETTES.hero };
 
@@ -1502,7 +1638,8 @@
       shocks[shockIdx] = [(x - innerWidth / 2) / innerHeight, (innerHeight / 2 - y) / innerHeight, 0];
       shockIdx = (shockIdx + 1) % shocks.length;
     };
-    const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+    const FAR = 9; // pointer parked off-screen until the user moves it
+    const ptr = { x: FAR, y: FAR, tx: FAR, ty: FAR };
     let warp = 0;
 
     const stage = (() => {
@@ -1513,34 +1650,41 @@
       if (!gl) return null;
       const vs = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
       const fs = `precision highp float;
-        uniform vec2 R,M;uniform float T,V,G;uniform vec3 A,B,C;uniform vec3 S[4];
+        uniform vec2 R,M;uniform float T,V,G,D,P,Y;uniform vec3 A,B,C;uniform vec3 S[4];
         float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
         float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);
           return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
-        float fbm(vec2 p){float a=.5,s=0.;mat2 m=mat2(.8,.6,-.6,.8);
-          for(int i=0;i<4;i++){s+=a*n(p);p=m*p*2.03;a*=.5;}return s;}
         void main(){
-          vec2 uv=(gl_FragCoord.xy-.5*R)/R.y,p=uv;float ring=0.;
-          for(int i=0;i<4;i++){vec3 s=S[i];if(s.z>=0.){vec2 d=p-s.xy;float r=length(d),w=s.z*1.5;
-            float k=exp(-pow((r-w)*8.,2.))*exp(-s.z*2.4);p+=d/(r+.001)*k*.16;ring+=k;}}
-          vec2 md=p-M;p-=md*exp(-dot(md,md)*8.)*.22;
-          float t=T*.07;
-          vec2 q=vec2(fbm(p*1.5+t),fbm(p*1.5-t+5.2));
-          vec2 r=vec2(fbm(p*1.6+3.*q+vec2(1.7,9.2)+t*1.4),fbm(p*1.6+3.*q+vec2(8.3,2.8)-t*1.1));
-          float f=fbm(p*1.4+3.4*r);
-          vec3 c=vec3(.975,.98,1.);
-          c=mix(c,A,smoothstep(.25,.58,f)*G);
-          c=mix(c,B,smoothstep(.5,.78,f)*G);
-          c=mix(c,C,pow(1.-abs(2.*f-1.),9.)*.55*G);
-          c=mix(c,C,clamp(pow(max(0.,length(r)-.7),2.)*1.4,0.,.6)*G);
-          vec2 g=uv*42.;vec2 gi=floor(g);float st=h(gi);
-          c=mix(c,C,step(.985,st)*smoothstep(.2,.0,length(fract(g)-.5))*(.5+.5*sin(T*2.+st*90.))*.55);
-          float a=atan(uv.y,uv.x),rr=length(uv),id=floor(a*48.);float sp=h(vec2(id,3.));
-          float streak=smoothstep(.93,1.,fract(rr*(1.+sp)*1.2-T*(1.+sp)*1.6+sp*9.))*step(.45,sp)*smoothstep(.5,.0,abs(fract(a*48.)-.5));
-          c=mix(c,C,clamp(streak*V*smoothstep(.05,.5,rr)*1.2,0.,.7));
-          c=mix(c,C,clamp(ring*.65,0.,.65));
-          c+=(h(gl_FragCoord.xy+T)-.5)*.012;
-          gl_FragColor=vec4(c,1.);
+          vec2 fc=gl_FragCoord.xy,uv=(fc-.5*R)/R.y,res=R/P,px=fc/P;
+          float u2p=R.y/P,aa=max(.9,1./P);
+          vec2 q=px-(M*u2p+.5*res);float lens=exp(-dot(q,q)/45000.);
+          vec2 sp=px-q*lens*.38;
+          float ring=0.;
+          for(int i=0;i<4;i++){vec3 s=S[i];if(s.z>=0.){vec2 d=sp-(s.xy*u2p+.5*res);float r=length(d);
+            float k=exp(-pow((r-s.z*900.)/42.,2.))*exp(-s.z*1.6);sp+=d/(r+.001)*k*10.;ring+=k;}}
+          float G0=28.;vec2 gp=sp-vec2(0.,Y);
+          vec2 cell=floor(gp/G0),f=(fract(gp/G0)-.5)*G0;
+          float ln=smoothstep(aa,0.,min(abs(f.x),abs(f.y)));
+          f.y/=1.+V*5.;float d=length(f);
+          float act=smoothstep(.62,.9,n(cell*.11+vec2(T*.15,-T*.1))*.6+n(cell*.035-T*.05)*.4);
+          float tw=step(.985,h(cell))*(.5+.5*sin(T*2.5+h(cell+7.)*60.));
+          float scan=exp(-pow((1.-px.y/res.y-fract(T*.045))*res.y/70.,2.));
+          float lit=clamp(act*.75+lens*1.1+ring*1.2+tw*.8+scan*.3,0.,1.);
+          float rad=1.05+lit*1.5,m=smoothstep(rad+aa,rad-.3,d);
+          vec3 col=mix(vec3(.972,.977,1.),vec3(.02,.024,.058),D);
+          float tt=T*.06;
+          vec2 a1=uv-vec2(.62+.1*sin(tt*3.),.48+.05*cos(tt*2.3)),a2=uv-vec2(-.7+.08*cos(tt*2.6),-.15+.1*sin(tt*1.9));
+          col=mix(col,A,exp(-dot(a1,a1)*2.4)*G*mix(.22,.42,D));
+          col=mix(col,B,exp(-dot(a2,a2)*2.8)*G*mix(.12,.2,D));
+          vec3 Cd=mix(C,vec3(1.),.3*D),ink=mix(vec3(.08,.1,.2),vec3(.78,.82,1.),D);
+          col=mix(col,C,lens*mix(.05,.12,D));
+          col=mix(col,Cd,ln*lens*.2);
+          col=mix(col,mix(ink,Cd,lit),m*clamp(mix(.2,.17,D)+lit*.8,0.,1.));
+          col+=Cd*lit*exp(-d*d/40.)*.2*D;
+          col=mix(col,C,V*.05);
+          col*=1.-D*.25*dot(uv,uv);
+          col+=(h(fc+fract(T))-.5)*.01;
+          gl_FragColor=vec4(col,1.);
         }`;
       const compile = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
       const prog = gl.createProgram();
@@ -1557,8 +1701,10 @@
       gl.useProgram(prog);
       gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
       const U = {};
-      ['R', 'M', 'T', 'V', 'G', 'A', 'B', 'C', 'S'].forEach(n => { U[n] = gl.getUniformLocation(prog, n); });
-      let scale = fine ? .6 : .4;
+      ['R', 'M', 'T', 'V', 'G', 'D', 'P', 'Y', 'A', 'B', 'C', 'S'].forEach(n => { U[n] = gl.getUniformLocation(prog, n); });
+      // Dots need crisp pixels, so render near device resolution; the shader is cheap.
+      const dpr = devicePixelRatio || 1;
+      let scale = Math.min(dpr, fine ? 1.5 : 1);
       const size = () => {
         cv.width = Math.max(2, innerWidth * scale | 0);
         cv.height = Math.max(2, innerHeight * scale | 0);
@@ -1572,15 +1718,18 @@
       let slow = 0, n = 0;
       return {
         draw(t, dt) {
-          if (++n > 30 && scale > .25) {
+          if (++n > 30 && scale > .5) {
             slow = dt > 30 ? slow + 1 : Math.max(0, slow - 1);
-            if (slow > 30) { scale = Math.max(.25, scale - .15); slow = 0; size(); }
+            if (slow > 30) { scale = Math.max(.5, scale - .25); slow = 0; size(); }
           }
           gl.uniform2f(U.R, cv.width, cv.height);
           gl.uniform2f(U.M, ptr.x, ptr.y);
           gl.uniform1f(U.T, t);
           gl.uniform1f(U.V, warp);
           gl.uniform1f(U.G, pal.gain);
+          gl.uniform1f(U.D, theme.d);
+          gl.uniform1f(U.P, cv.width / innerWidth);
+          gl.uniform1f(U.Y, scrollY * .35);
           gl.uniform3fv(U.A, pal.a);
           gl.uniform3fv(U.B, pal.b);
           gl.uniform3fv(U.C, pal.c);
@@ -1589,11 +1738,17 @@
         }
       };
     })();
+    if (stage) theme.redraw = () => stage.draw(performance.now() / 1000, 16);
 
+    const park = () => { ptr.x = ptr.y = ptr.tx = ptr.ty = FAR; };
     addEventListener('pointermove', e => {
       ptr.tx = (e.clientX - innerWidth / 2) / innerHeight;
       ptr.ty = (innerHeight / 2 - e.clientY) / innerHeight;
+      if (Math.abs(ptr.x) >= FAR) { ptr.x = ptr.tx; ptr.y = ptr.ty; }
     }, { passive: true });
+    addEventListener('pointerup', e => { if (e.pointerType !== 'mouse') park(); }, { passive: true });
+    addEventListener('pointercancel', park, { passive: true });
+    document.documentElement.addEventListener('mouseleave', park);
     addEventListener('pointerdown', e => shock(e.clientX, e.clientY), { passive: true });
 
     /* ===== Kinetic marquees and ghost numbers ===== */
@@ -1726,8 +1881,9 @@
       const v = Math.min(1, Math.abs(vy) / 5);
       warp += (v - warp) * (v > warp ? .25 : .05);
 
-      ptr.x += (ptr.tx - ptr.x) * .06;
-      ptr.y += (ptr.ty - ptr.y) * .06;
+      ptr.x += (ptr.tx - ptr.x) * .1;
+      ptr.y += (ptr.ty - ptr.y) * .1;
+      theme.d += ((theme.dark ? 1 : 0) - theme.d) * .08;
       const mix = (from, to) => from.forEach((_, i) => { from[i] += (to[i] - from[i]) * .035; });
       mix(pal.a, pal.target[0]); mix(pal.b, pal.target[1]); mix(pal.c, pal.target[2]);
       pal.gain += (pal.target[3] - pal.gain) * .035;
@@ -1811,7 +1967,7 @@
         counter.textContent = String(Math.min(100, Math.round(t / OPEN * 100))).padStart(3, '0');
         ctx.globalCompositeOperation = 'source-over';
         ctx.clearRect(0, 0, W, H);
-        ctx.fillStyle = '#f8f9ff';
+        ctx.fillStyle = theme.dark ? '#05060f' : '#f8f9ff';
         ctx.fillRect(0, 0, W, H);
         let R = 0;
         if (t >= OPEN) {
