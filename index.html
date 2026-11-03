@@ -1952,9 +1952,7 @@
     const hud = document.createElement('div');
     hud.className = 'hud';
     hud.setAttribute('aria-hidden', 'true');
-    hud.innerHTML = '<span class="live"></span><span>Live</span><span class="sep">/</span><b class="fps">60</b><span>fps</span>'
-      + '<span class="hint-extra"><span class="sep">/</span> <b class="nodes">0</b> 3D nodes</span>'
-      + '<span class="sep">/</span><span>' + (fine ? 'move · click · scroll' : 'tap · scroll') + '</span>';
+    hud.innerHTML = '<span> </span>';
     $('.hero-links').after(hud);
     const hudFps = $('.fps', hud), hudNodes = $('.nodes', hud);
     const setNodes = () => { hudNodes.textContent = (stage ? stage.count : 0).toLocaleString(); };
