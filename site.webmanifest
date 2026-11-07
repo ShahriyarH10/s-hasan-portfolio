@@ -1,0 +1,14 @@
+{
+  "name": "Md. Shahriyar Hasan",
+  "short_name": "Shahriyar",
+  "description": "Portfolio of Md. Shahriyar Hasan — Software Engineer, AI & Data Science.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f3ec",
+  "theme_color": "#1c1b18",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
