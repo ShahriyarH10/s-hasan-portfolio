@@ -292,13 +292,17 @@
        and "ICCA 2026" sits on the same baseline as the numbers. */
     .proof-item { padding: 26px 24px 0 0; display: grid; grid-row: span 2; grid-template-rows: subgrid; row-gap: 0; }
     .proof-item + .proof-item { padding-left: 24px; border-left: 1px solid rgba(255,255,255,.3); }
+    .proof { container-type: inline-size; }
     .proof-num {
-      display: block; font-size: clamp(4.4rem, 12vw, 11.5rem); line-height: .82; letter-spacing: -.05em; font-variant-numeric: tabular-nums;
-      font-weight: 800; font-stretch: 82%;
+      --fs: clamp(3.4rem, 11cqi, 10.5rem); display: block; align-self: end; font-size: var(--fs); line-height: .84; letter-spacing: -.04em;
+      font-variant-numeric: tabular-nums; font-weight: 800; font-stretch: 72%;
     }
+    /* Two stacked lines sized so the block is exactly as tall as one figure:
+       cap height .70em, line-height .84 -> .70 / (.84 + .70) = .454 */
+    .proof-num.icca { font-size: calc(var(--fs) * .454); margin-bottom: calc(var(--fs) * .045); }
+    .proof-num.icca span { display: block; }
     .motion .proof-num { font-weight: 130; transition: font-weight 2.2s var(--ease) .1s; }
     .motion .numbers.in .proof-num { font-weight: 800; }
-    .proof-num.small { align-self: end; white-space: nowrap; font-size: clamp(1.9rem, 3.5vw, 3.5rem); line-height: .86; letter-spacing: -.03em; }
     .proof-num sup { font-size: .4em; vertical-align: 1.1em; font-weight: 500; }
     .proof-label { display: block; margin-top: 16px; font-size: .96rem; font-weight: 500; max-width: 24ch; }
     .glance-head { display: flex; justify-content: space-between; gap: 16px; margin-top: 64px; }
@@ -567,7 +571,9 @@
     .gp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     .gp-stat { background: var(--accent); color: #fff; border-radius: 12px; padding: 16px 16px 14px; display: grid; grid-template-rows: auto 1fr; gap: 8px; }
     .gp-stat b { font-size: 2.9rem; font-weight: 820; font-stretch: 82%; letter-spacing: -.04em; line-height: .86; }
-    .gp-stat b.small { font-size: 1.75rem; line-height: 1.2; align-self: end; }
+    .gp-stat b.icca { font-size: calc(2.9rem * .454); line-height: .84; }
+    .gp-stat b.icca span { display: block; }
+    .gp-stat { align-content: start; }
     .gp-stat b sup { font-size: .45em; vertical-align: .9em; }
     .gp-stat span { font-size: .84rem; line-height: 1.35; color: rgba(255,255,255,.88); }
     .gp-work { list-style: none; border-top: 1px solid var(--line); }
@@ -688,6 +694,7 @@
       .exp-side { position: static; margin-bottom: 32px; }
       .exp-bar { left: -14px; }
       .proof { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .proof-num { --fs: 19cqi; }
       .proof-item:nth-child(3) { border-left: 0; padding-left: 0; }
       .proof-item:nth-child(n+3) { border-top: 1px solid rgba(255,255,255,.3); margin-top: 26px; }
       .glance { grid-template-columns: repeat(3, auto); }
@@ -723,8 +730,7 @@
       .proof-item, .proof-item + .proof-item { padding: 18px 12px 0 0; border-left: 0; }
       .proof-item:nth-child(even) { padding-left: 16px; border-left: 1px solid rgba(255,255,255,.3); }
       .proof-item:nth-child(n+3) { margin-top: 18px; }
-      .proof-num { font-size: 26vw; }
-      .proof-num.small { font-size: 7.6vw; }
+      .proof-num { --fs: 21cqi; }
       .glance { grid-template-columns: 1fr 1fr; }
       .glance-head { margin-top: 40px; }
       .exp-list li { padding-left: 44px; }
@@ -846,7 +852,7 @@
         <div class="proof-item" role="listitem"><span class="proof-num" data-count="4">4</span><span class="proof-label">active users on MessManager, an app I built and run</span></div>
         <div class="proof-item" role="listitem"><span class="proof-num" data-count="5">5</span><span class="proof-label">students using my AIUB Notice Monitor Bot</span></div>
         <div class="proof-item" role="listitem"><span class="proof-num"><span data-count="20">20</span><sup>+</sup></span><span class="proof-label">open-data sources in one search</span></div>
-        <div class="proof-item" role="listitem"><span class="proof-num small">ICCA 2026</span><span class="proof-label">co-authored IoT paper, accepted</span></div>
+        <div class="proof-item" role="listitem"><span class="proof-num icca"><span>ICCA</span><span>2026</span></span><span class="proof-label">co-authored IoT paper, accepted</span></div>
       </div>
       <div class="glance-head label"><span>At a glance</span><button type="button" class="glance-open" data-glance>Open the 30-second summary <span aria-hidden="true">→</span></button></div>
       <dl class="glance" aria-label="At a glance">
@@ -1020,7 +1026,7 @@
         <div class="case-stats">
           <div><b>4</b><span>active users</span></div>
           <div><b>~32&nbsp;KB</b><span>JavaScript to load the landing page</span></div>
-          <div><b>0</b><span>build steps: a static, vanilla JS app</span></div>
+          <div><b>8</b><span>build steps: a static, vanilla JS app</span></div>
           <div><b>2</b><span>backends, one codebase: real + sandbox</span></div>
         </div>
         <ol class="case-points">
@@ -1296,7 +1302,7 @@
         <div class="gp-stat"><b>4</b><span>active users on MessManager, an app I built and run</span></div>
         <div class="gp-stat"><b>5</b><span>students using my AIUB Notice Monitor Bot</span></div>
         <div class="gp-stat"><b>20<sup>+</sup></b><span>open-data sources in one search</span></div>
-        <div class="gp-stat"><b class="small">ICCA 2026</b><span>co-authored IoT paper, accepted</span></div>
+        <div class="gp-stat"><b class="icca"><span>ICCA</span><span>2026</span></b><span>co-authored IoT paper, accepted</span></div>
       </div>
     </div>
 
